@@ -48,46 +48,45 @@ input{
   background:#020617;
   color:#fff;
 }
-.ticket-control{display:flex;gap:8px;margin-top:8px}
-.ticket-control button{
-  flex:1;padding:10px;border:none;border-radius:12px;
-  background:linear-gradient(135deg,var(--cyan),var(--neon));
-  font-weight:800;cursor:pointer;color:#052e16;
-}
-.total{text-align:center;font-size:18px;margin:12px 0}
-button.main{
-  width:100%;padding:16px;border:none;border-radius:20px;
-  font-size:16px;font-weight:900;
-  background:linear-gradient(135deg,var(--neon),var(--cyan),var(--purple));
-  cursor:pointer;color:#052e16;
-}
-button.main:disabled{
-  opacity:.6;cursor:not-allowed
-}
 .ticket{
-  margin-top:14px;padding:14px;border-radius:16px;
-  background:#020617;border:1px solid #1e293b;text-align:center;
+  margin-top:12px;
+  padding:14px;
+  border-radius:16px;
+  background:#020617;
+  border:1px solid #1e293b;
+  text-align:center;
 }
 .ticket img{width:140px;margin-top:8px}
-.progress-box{margin-top:15px}
+button.main{
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:20px;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--neon),var(--cyan),var(--purple));
+  cursor:pointer;
+  color:#052e16;
+}
+button.main:disabled{opacity:.6;cursor:not-allowed}
 .progress-bar{
-  width:100%;height:14px;background:#020617;
-  border-radius:999px;border:1px solid #1e293b;overflow:hidden
+  height:14px;
+  background:#020617;
+  border-radius:999px;
+  border:1px solid #1e293b;
+  overflow:hidden;
 }
 .progress-fill{
-  height:100%;width:0%;
+  height:100%;
+  width:0%;
   background:linear-gradient(90deg,#22c55e,#06b6d4,#8b5cf6);
   transition:width .3s ease;
 }
-.progress-text{text-align:center;font-size:13px;color:#c7d2fe;margin-top:6px}
-.legal{margin-top:30px;font-size:12px;color:#94a3b8;text-align:center}
 </style>
 </head>
 
 <body>
 <div class="container">
 
-<img src="logo.png" class="logo">
 <h1>RifariRD</h1>
 <p class="premio">🎉 Rifando RD$50,000 🎉</p>
 
@@ -98,60 +97,46 @@ button.main:disabled{
 <label>Cantidad de tickets</label>
 <input id="cantidad" type="number" min="1" value="1">
 
-<div class="ticket-control">
-  <button onclick="sumar(1)">+1</button>
-  <button onclick="sumar(5)">+5</button>
-  <button onclick="sumar(10)">+10</button>
-  <button onclick="sumar(50)">+50</button>
-</div>
-
-<div class="total">Total a pagar: <b>RD$ <span id="total">25</span></b></div>
+<p>Total a pagar: <b>RD$ <span id="total">25</span></b></p>
 
 <label>Comprobante</label>
-<input type="file" id="comprobante" accept="image/*">
+<input type="file" id="comprobante">
 
-<label style="margin-top:10px;display:flex;gap:10px">
-  <input type="checkbox" id="terminos">
-  <span>Acepto los <b>términos establecidos</b></span>
+<label>
+  <input type="checkbox" id="terminos"> Acepto los términos
 </label>
 
 <button class="main" id="btnRegistrar" onclick="registrar()">Registrar y asignar tickets</button>
 
 <div id="resultado"></div>
 
-<div class="progress-box">
-  <div class="progress-bar">
-    <div class="progress-fill" id="progressFill"></div>
-  </div>
-  <div class="progress-text" id="progressText">0% vendidos</div>
+<div class="progress-bar">
+  <div class="progress-fill" id="progressFill"></div>
 </div>
+<p id="progressText">0% vendidos</p>
 
 <hr>
 
-<h2>🔎 Ver mis tickets</h2>
+<h3>🔎 Ver mis tickets</h3>
 <input id="buscarTel" placeholder="Teléfono">
 <button class="main" onclick="buscar()">Buscar</button>
 <div id="lista"></div>
 
-<p class="legal">
-  El ganador será seleccionado únicamente cuando se haya vendido el <b>100%</b> de los boletos.
-</p>
-
 </div>
 
-<!-- 🔥 FIREBASE COMPAT -->
+<!-- 🔥 FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
 <script>
 firebase.initializeApp({
-  apiKey: "AIzaSyCKyR0Y8oTMDvQOI_j03uRMQiqjZvBysxw",
-  authDomain: "rifarird.firebaseapp.com",
-  projectId: "rifarird",
-  storageBucket: "rifarird.appspot.com",
-  messagingSenderId: "1025146093171",
-  appId: "1:1025146093171:web:cfbb5d16d59b14f89c3406"
+  apiKey:"AIzaSyCKyR0Y8oTMDvQOI_j03uRMQiqjZvBysxw",
+  authDomain:"rifarird.firebaseapp.com",
+  projectId:"rifarird",
+  storageBucket:"rifarird.appspot.com",
+  messagingSenderId:"1025146093171",
+  appId:"1:1025146093171:web:cfbb5d16d59b14f89c3406"
 });
 
 const db = firebase.firestore();
@@ -160,26 +145,14 @@ const storage = firebase.storage();
 const TOTAL_TICKETS = 10000;
 const PRECIO = 25;
 
-const nombre = nombreEl = document.getElementById("nombre");
-const apellidoEl = document.getElementById("apellido");
-const telefonoEl = document.getElementById("telefono");
-const comprobanteEl = document.getElementById("comprobante");
-const terminosEl = document.getElementById("terminos");
-const cantidadEl = document.getElementById("cantidad");
 const totalEl = document.getElementById("total");
-const resultadoEl = document.getElementById("resultado");
-const listaEl = document.getElementById("lista");
-const buscarTelEl = document.getElementById("buscarTel");
 const progressFill = document.getElementById("progressFill");
 const progressText = document.getElementById("progressText");
-const btnRegistrar = document.getElementById("btnRegistrar");
+const resultado = document.getElementById("resultado");
 
-cantidadEl.oninput = () => totalEl.textContent = (cantidadEl.value || 1) * PRECIO;
-
-function sumar(n){
-  cantidadEl.value = +cantidadEl.value + n;
-  cantidadEl.oninput();
-}
+document.getElementById("cantidad").oninput = e=>{
+  totalEl.textContent = (e.target.value||1)*PRECIO;
+};
 
 function generarQR(n){
   return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${n}`;
@@ -189,70 +162,69 @@ function generarQR(n){
 db.collection("stats").doc("global").onSnapshot(doc=>{
   if(!doc.exists) return;
   const { vendidos, total } = doc.data();
-  const pct = Math.min(Math.round((vendidos/total)*100),100);
-  progressFill.style.width = pct + "%";
-  progressText.textContent = pct + "% vendidos";
-  if(pct >= 100){
-    btnRegistrar.disabled = true;
-    btnRegistrar.textContent = "🎉 Rifa completada";
+  const pct = Math.round((vendidos/total)*100);
+  progressFill.style.width = pct+"%";
+  progressText.textContent = pct+"% vendidos";
+  if(pct>=100){
+    document.getElementById("btnRegistrar").disabled=true;
   }
 });
 
 /* 🎟️ REGISTRAR */
 async function registrar(){
-for(let i = 0; i < cantidadEl.value; i++){
+  const nombre = document.getElementById("nombre").value;
+  const apellido = document.getElementById("apellido").value;
+  const telefono = document.getElementById("telefono").value;
+  const cantidad = +document.getElementById("cantidad").value;
+  const file = document.getElementById("comprobante").files[0];
 
-  // 1️⃣ GENERAR NÚMERO ALEATORIO (0000–9999)
-  let num;
-  do {
-    num = Math.floor(Math.random() * 10000)
-      .toString()
-      .padStart(4, "0");
-  } while ((await db.collection("tickets").doc(num).get()).exists);
+  if(!nombre||!apellido||!telefono||!file||!document.getElementById("terminos").checked){
+    alert("Completa todo");
+    return;
+  }
 
-  // 2️⃣ GENERAR QR
-  const qr = generarQR(num);
+  resultado.innerHTML = "<h3>⏳ Generando tickets...</h3>";
 
-  // 3️⃣ MOSTRAR INMEDIATAMENTE EN PANTALLA
-  const ticketDiv = document.createElement("div");
-  ticketDiv.className = "ticket";
-  ticketDiv.innerHTML = `
-    🎟️ <b>${num}</b><br>
-    <img src="${qr}">
-  `;
-  cont.appendChild(ticketDiv);
+  const ref = storage.ref("comprobantes/"+Date.now()+"_"+file.name);
+  await ref.put(file);
+  const url = await ref.getDownloadURL();
 
-  // 🔥 FORZAR RENDER REAL
-  await new Promise(r => requestAnimationFrame(r));
+  for(let i=0;i<cantidad;i++){
+    let num;
+    do{
+      num = Math.floor(Math.random()*10000).toString().padStart(4,"0");
+    }while((await db.collection("tickets").doc(num).get()).exists);
 
-  // 4️⃣ GUARDAR EN FIREBASE
-  await db.collection("tickets").doc(num).set({
-    nombre: nombreEl.value.trim(),
-    apellido: apellidoEl.value.trim(),
-    telefono: telefonoEl.value.trim(),
-    numero: num,
-    qr: qr,
-    comprobante: url,
-    fecha: new Date().toISOString()
-  });
+    const qr = generarQR(num);
 
-  // 5️⃣ ACTUALIZAR CONTADOR GLOBAL
-  await db.collection("stats").doc("global").update({
-    vendidos: firebase.firestore.FieldValue.increment(1)
-  });
+    const div = document.createElement("div");
+    div.className="ticket";
+    div.innerHTML=`🎟️ <b>${num}</b><br><img src="${qr}">`;
+    resultado.appendChild(div);
+
+    await new Promise(r=>requestAnimationFrame(r));
+
+    await db.collection("tickets").doc(num).set({
+      nombre, apellido, telefono, numero:num, qr, comprobante:url,
+      fecha:new Date().toISOString()
+    });
+
+    await db.collection("stats").doc("global").update({
+      vendidos: firebase.firestore.FieldValue.increment(1)
+    });
+  }
 }
 
 async function buscar(){
-  listaEl.innerHTML="Buscando...";
-  const q = await db.collection("tickets")
-    .where("telefono","==",buscarTelEl.value.trim()).get();
-  listaEl.innerHTML = q.empty ? "Sin tickets" : "";
+  const tel = document.getElementById("buscarTel").value;
+  const lista = document.getElementById("lista");
+  lista.innerHTML="";
+  const q = await db.collection("tickets").where("telefono","==",tel).get();
   q.forEach(d=>{
-    listaEl.innerHTML += `<div class="ticket">${d.data().numero}<br><img src="${d.data().qr}"></div>`;
+    lista.innerHTML+=`<div class="ticket">${d.data().numero}<br><img src="${d.data().qr}"></div>`;
   });
 }
 </script>
 
 </body>
 </html>
-
