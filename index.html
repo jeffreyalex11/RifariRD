@@ -77,6 +77,8 @@ button.main{
   cursor:pointer;
   color:#052e16;
 }
+
+/* TICKETS */
 .ticket{
   margin-top:14px;
   padding:14px;
@@ -85,7 +87,33 @@ button.main{
   border:1px solid #1e293b;
   text-align:center;
 }
-.ticket img{width:140px;margin-top:8px}
+.ticket img{width:130px;margin-top:8px}
+
+/* VERIFICACIÓN */
+.verify-box{
+  margin-top:30px;
+  padding:20px;
+  border-radius:22px;
+  border:1px solid #1e293b;
+  background:linear-gradient(180deg,#020617,#020617cc);
+}
+.verify-title{
+  text-align:center;
+  font-weight:900;
+  font-size:18px;
+  margin-bottom:10px;
+  background:linear-gradient(90deg,var(--neon),var(--cyan));
+  -webkit-background-clip:text;
+  color:transparent;
+}
+.verify-user{
+  text-align:center;
+  font-size:14px;
+  color:#c7d2fe;
+  margin-bottom:10px;
+}
+
+/* PROGRESO */
 .progress-bar{
   width:100%;
   height:16px;
@@ -99,80 +127,10 @@ button.main{
   height:100%;
   width:0%;
   background:linear-gradient(90deg,var(--neon),var(--cyan),var(--purple));
-  transition:width .4s;
 }
 .progress-text{text-align:center;margin-top:6px;font-size:13px;color:#c7d2fe}
 
-/* BANCOS */
-.bank-box{
-  display:flex;
-  gap:12px;
-  justify-content:center;
-  margin:20px 0;
-}
-.bank-card{
-  background:#020617;
-  border:1px solid #1e293b;
-  border-radius:18px;
-  padding:14px;
-  width:160px;
-  text-align:center;
-}
-.bank-card img{width:80px;margin-bottom:8px}
-.bank-card p{margin:4px 0;font-size:13px;color:#c7d2fe}
-.bank-card span{color:#22c55e;font-weight:900}
-
-/* TÉRMINOS */
-.terms-box{
-  margin-top:16px;
-  padding:14px;
-  border-radius:16px;
-  border:1px solid #1e293b;
-  background:#020617;
-  display:flex;
-  gap:10px;
-  font-size:14px;
-  color:#c7d2fe;
-}
-.terms-box input{accent-color:#22c55e;margin-top:3px}
-.terms-box a{color:#22c55e;font-weight:700;cursor:pointer}
-
-/* MODAL */
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(2,6,23,.85);
-  backdrop-filter:blur(8px);
-  z-index:999;
-}
-.modal-content{
-  max-width:460px;
-  margin:10vh auto;
-  background:#020617;
-  border:1px solid #1e293b;
-  border-radius:22px;
-  padding:24px;
-}
-.modal-content h2{
-  text-align:center;
-  background:linear-gradient(90deg,var(--neon),var(--cyan));
-  -webkit-background-clip:text;
-  color:transparent;
-}
-.modal-content p{font-size:13px;line-height:1.6}
-.close-modal{
-  width:100%;
-  margin-top:14px;
-  padding:12px;
-  border:none;
-  border-radius:14px;
-  background:linear-gradient(135deg,var(--neon),var(--cyan));
-  font-weight:900;
-  cursor:pointer;
-  color:#052e16;
-}
-
+/* LEGAL */
 .legal{margin-top:26px;font-size:12px;color:#94a3b8;text-align:center}
 </style>
 </head>
@@ -203,15 +161,6 @@ button.main{
 <label>Comprobante de pago</label>
 <input type="file" id="comprobante" accept="image/*">
 
-<div class="terms-box">
-  <input type="checkbox" id="terminos">
-  <span>
-    Estoy de acuerdo con los 
-    <a onclick="abrirModal()">Términos y Condiciones</a> y las 
-    <a onclick="abrirModal()">Políticas de la página</a>.
-  </span>
-</div>
-
 <button class="main" onclick="registrar()">Registrar y asignar tickets</button>
 
 <div id="resultado"></div>
@@ -219,23 +168,12 @@ button.main{
 <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 <div class="progress-text" id="progressText">0% vendidos</div>
 
-<hr>
-
-<h3 style="text-align:center">🔎 Ver mis tickets</h3>
-<input id="buscarTel" placeholder="Ingresa tu teléfono">
-<button class="main" onclick="buscar()">Buscar tickets</button>
-<div id="lista"></div>
-
-<h3 style="text-align:center;margin-top:22px">💳 Cuentas disponibles</h3>
-<div class="bank-box">
-  <div class="bank-card">
-    <img src="banreservas.png">
-    <p><b>Banreservas</b><br>Jeffrey Flores<br>Cuenta de ahorro<br><span>9601539179</span></p>
-  </div>
-  <div class="bank-card">
-    <img src="qik.png">
-    <p><b>Qik</b><br>Jeffrey Flores<br><span>1003191261</span></p>
-  </div>
+<!-- 🔎 VERIFICACIÓN -->
+<div class="verify-box">
+  <div class="verify-title">🔎 Verificar mis tickets</div>
+  <input id="buscarTel" placeholder="Ingresa tu teléfono">
+  <button class="main" onclick="buscar()">Verificar</button>
+  <div id="lista"></div>
 </div>
 
 <p class="legal">
@@ -243,17 +181,6 @@ RifariRD es una rifa digital independiente.<br>
 El ganador será seleccionado cuando se venda el 100% de los boletos.
 </p>
 
-</div>
-
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <h2>📜 Términos y Políticas</h2>
-    <p>Los tickets no son reembolsables.</p>
-    <p>El sorteo se realizará cuando se vendan todos los boletos.</p>
-    <p>RifariRD no se responsabiliza por datos incorrectos.</p>
-    <button class="close-modal" onclick="cerrarModal()">Entendido</button>
-  </div>
 </div>
 
 <!-- FIREBASE -->
@@ -286,80 +213,43 @@ function generarQR(num){
   return `https://jeffreyalex11.github.io/RifariRD/ticket.html?id=${num}`;
 }
 
-function abrirModal(){document.getElementById("modal").style.display="block";}
-function cerrarModal(){document.getElementById("modal").style.display="none";}
-
-db.collection("stats").doc("global").onSnapshot(doc=>{
-  if(!doc.exists) return;
-  const {vendidos,total} = doc.data();
-  const pct = Math.round((vendidos/total)*100);
-  document.getElementById("progressFill").style.width = pct + "%";
-  document.getElementById("progressText").textContent = pct + "% vendidos";
-});
-
 async function registrar(){
+  const nombre = document.getElementById("nombre").value.trim();
+  const apellido = document.getElementById("apellido").value.trim();
+  const telefono = document.getElementById("telefono").value.trim();
+  const cantidad = Number(cantidadEl.value);
+  const file = document.getElementById("comprobante").files[0];
 
-  // 🔹 Obtener valores correctamente
-  const nombreVal = document.getElementById("nombre").value.trim();
-  const apellidoVal = document.getElementById("apellido").value.trim();
-  const telefonoVal = document.getElementById("telefono").value.trim();
-  const cantidadVal = Number(document.getElementById("cantidad").value);
-  const comprobanteFile = document.getElementById("comprobante").files[0];
-  const aceptaTerminos = document.getElementById("terminos").checked;
-
-  // 🔹 Validaciones
-  if(!nombreVal || !apellidoVal || !telefonoVal){
-    alert("Completa nombre, apellido y teléfono");
-    return;
-  }
-
-  if(!comprobanteFile){
-    alert("Debes subir el comprobante de pago");
-    return;
-  }
-
-  if(!aceptaTerminos){
-    alert("Debes aceptar los términos y políticas");
+  if(!nombre || !apellido || !telefono || !file){
+    alert("Completa todos los datos y sube el comprobante");
     return;
   }
 
   const resultado = document.getElementById("resultado");
   resultado.innerHTML = "<h3>⏳ Generando tickets...</h3>";
 
-  // 🔹 Subir comprobante
-  const ref = storage.ref(
-    "comprobantes/" + Date.now() + "_" + comprobanteFile.name
-  );
-  await ref.put(comprobanteFile);
-  const comprobanteURL = await ref.getDownloadURL();
+  const ref = storage.ref("comprobantes/" + Date.now() + "_" + file.name);
+  await ref.put(file);
+  const url = await ref.getDownloadURL();
 
-  // 🔹 Generar tickets
-  for(let i = 0; i < cantidadVal; i++){
-
-    let numero;
+  for(let i=0;i<cantidad;i++){
+    let num;
     do{
-      numero = Math.floor(Math.random() * TOTAL)
-        .toString()
-        .padStart(4,"0");
-    }while((await db.collection("tickets").doc(numero).get()).exists);
+      num = Math.floor(Math.random()*TOTAL).toString().padStart(4,"0");
+    }while((await db.collection("tickets").doc(num).get()).exists);
 
-    const qrLink = generarQR(numero);
-
+    const qr = generarQR(num);
     resultado.innerHTML += `
       <div class="ticket">
-        🎟️ <b>${numero}</b><br>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qrLink}">
+        🎟️ <b>${num}</b><br>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${qr}">
       </div>
     `;
 
-    await db.collection("tickets").doc(numero).set({
-      nombre: nombreVal,
-      apellido: apellidoVal,
-      telefono: telefonoVal,
-      numero: numero,
-      qr: qrLink,
-      comprobante: comprobanteURL,
-      fecha: new Date().toISOString()
+    await db.collection("tickets").doc(num).set({
+      nombre, apellido, telefono,
+      numero:num, qr, comprobante:url,
+      fecha:new Date().toISOString()
     });
 
     await db.collection("stats").doc("global").update({
@@ -375,20 +265,30 @@ async function buscar(){
 
   const q = await db.collection("tickets").where("telefono","==",tel).get();
   if(q.empty){
-    lista.innerHTML = "No se encontraron tickets";
+    lista.innerHTML = "❌ No se encontraron tickets";
     return;
   }
+
   lista.innerHTML = "";
+  let nombre = "", apellido = "";
+
   q.forEach(d=>{
+    const t = d.data();
+    nombre = t.nombre;
+    apellido = t.apellido;
     lista.innerHTML += `
       <div class="ticket">
-        🎟️ ${d.data().numero}<br>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${d.data().qr}">
+        🎟️ <b>${t.numero}</b><br>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${t.qr}">
       </div>
     `;
   });
+
+  lista.innerHTML =
+    `<div class="verify-user">👤 ${nombre} ${apellido}</div>` +
+    lista.innerHTML;
 }
 </script>
+
 </body>
 </html>
-
