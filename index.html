@@ -61,6 +61,9 @@ button.main{
   background:linear-gradient(135deg,var(--neon),var(--cyan),var(--purple));
   cursor:pointer;color:#052e16;
 }
+button.main:disabled{
+  opacity:.6;cursor:not-allowed
+}
 .ticket{
   margin-top:14px;padding:14px;border-radius:16px;
   background:#020617;border:1px solid #1e293b;text-align:center;
@@ -74,7 +77,6 @@ button.main{
 .progress-fill{
   height:100%;width:0%;
   background:linear-gradient(90deg,#22c55e,#06b6d4,#8b5cf6);
-  box-shadow:0 0 12px rgba(34,197,94,.9);
   transition:width .3s ease;
 }
 .progress-text{text-align:center;font-size:13px;color:#c7d2fe;margin-top:6px}
@@ -110,7 +112,7 @@ button.main{
 
 <label style="margin-top:10px;display:flex;gap:10px">
   <input type="checkbox" id="terminos">
-  <span>Estoy de acuerdo con los <b>términos establecidos</b></span>
+  <span>Acepto los <b>términos establecidos</b></span>
 </label>
 
 <button class="main" id="btnRegistrar" onclick="registrar()">Registrar y asignar tickets</button>
@@ -132,24 +134,24 @@ button.main{
 <div id="lista"></div>
 
 <p class="legal">
-  El ganador del concurso será seleccionado únicamente cuando se haya vendido el
-  <b>100%</b> de los boletos disponibles.
+  El ganador será seleccionado únicamente cuando se haya vendido el <b>100%</b> de los boletos.
 </p>
 
 </div>
 
+<!-- 🔥 FIREBASE COMPAT -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
 <script>
 firebase.initializeApp({
-  apiKey:"AIzaSyCKyR0Y8oTMDvQOI_j03uRMQiqjZvBysxw",
-  authDomain:"rifarird.firebaseapp.com",
-  projectId:"rifarird",
-  storageBucket:"rifarird.appspot.com",
-  messagingSenderId:"1025146093171",
-  appId:"1:1025146093171:web:cfbb5d16d59b14f89c3406"
+  apiKey: "AIzaSyCKyR0Y8oTMDvQOI_j03uRMQiqjZvBysxw",
+  authDomain: "rifarird.firebaseapp.com",
+  projectId: "rifarird",
+  storageBucket: "rifarird.appspot.com",
+  messagingSenderId: "1025146093171",
+  appId: "1:1025146093171:web:cfbb5d16d59b14f89c3406"
 });
 
 const db = firebase.firestore();
@@ -158,39 +160,39 @@ const storage = firebase.storage();
 const TOTAL_TICKETS = 10000;
 const PRECIO = 25;
 
-const nombre = document.getElementById("nombre");
-const apellido = document.getElementById("apellido");
-const telefono = document.getElementById("telefono");
-const comprobante = document.getElementById("comprobante");
-const terminos = document.getElementById("terminos");
-const cantidad = document.getElementById("cantidad");
-const total = document.getElementById("total");
-const resultado = document.getElementById("resultado");
-const lista = document.getElementById("lista");
-const buscarTel = document.getElementById("buscarTel");
+const nombre = nombreEl = document.getElementById("nombre");
+const apellidoEl = document.getElementById("apellido");
+const telefonoEl = document.getElementById("telefono");
+const comprobanteEl = document.getElementById("comprobante");
+const terminosEl = document.getElementById("terminos");
+const cantidadEl = document.getElementById("cantidad");
+const totalEl = document.getElementById("total");
+const resultadoEl = document.getElementById("resultado");
+const listaEl = document.getElementById("lista");
+const buscarTelEl = document.getElementById("buscarTel");
 const progressFill = document.getElementById("progressFill");
 const progressText = document.getElementById("progressText");
 const btnRegistrar = document.getElementById("btnRegistrar");
 
-cantidad.oninput = () => total.textContent = (cantidad.value || 1) * PRECIO;
+cantidadEl.oninput = () => totalEl.textContent = (cantidadEl.value || 1) * PRECIO;
 
 function sumar(n){
-  cantidad.value = +cantidad.value + n;
-  cantidad.oninput();
+  cantidadEl.value = +cantidadEl.value + n;
+  cantidadEl.oninput();
 }
 
 function generarQR(n){
   return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${n}`;
 }
 
-/* 📊 BARRA GLOBAL */
+/* 📊 PROGRESO GLOBAL */
 db.collection("stats").doc("global").onSnapshot(doc=>{
   if(!doc.exists) return;
   const { vendidos, total } = doc.data();
   const pct = Math.min(Math.round((vendidos/total)*100),100);
   progressFill.style.width = pct + "%";
   progressText.textContent = pct + "% vendidos";
-  if(pct>=100){
+  if(pct >= 100){
     btnRegistrar.disabled = true;
     btnRegistrar.textContent = "🎉 Rifa completada";
   }
@@ -198,33 +200,33 @@ db.collection("stats").doc("global").onSnapshot(doc=>{
 
 /* 🎟️ REGISTRAR */
 async function registrar(){
-  if(!nombre.value||!apellido.value||!telefono.value||!terminos.checked||!comprobante.files.length){
+  if(!nombreEl.value||!apellidoEl.value||!telefonoEl.value||!terminosEl.checked||!comprobanteEl.files.length){
     alert("Completa todos los datos");
     return;
   }
 
-  const live = document.createElement("div");
-  resultado.innerHTML = "<h3>⏳ Generando tickets...</h3>";
-  resultado.appendChild(live);
+  resultadoEl.innerHTML = "<h3>⏳ Generando tickets...</h3>";
+  const cont = document.createElement("div");
+  resultadoEl.appendChild(cont);
 
-  const ref = storage.ref("comprobantes/"+Date.now()+"_"+comprobante.files[0].name);
-  await ref.put(comprobante.files[0]);
+  const ref = storage.ref("comprobantes/"+Date.now()+"_"+comprobanteEl.files[0].name);
+  await ref.put(comprobanteEl.files[0]);
   const url = await ref.getDownloadURL();
 
-  for(let i=0;i<cantidad.value;i++){
+  for(let i=0;i<cantidadEl.value;i++){
     let num;
     do{
       num = Math.floor(Math.random()*TOTAL_TICKETS).toString().padStart(4,"0");
     }while((await db.collection("tickets").doc(num).get()).exists);
 
     const qr = generarQR(num);
-    live.innerHTML += `<div class="ticket">🎟️ <b>${num}</b><br><img src="${qr}"></div>`;
+    cont.innerHTML += `<div class="ticket">🎟️ <b>${num}</b><br><img src="${qr}"></div>`;
     await new Promise(r=>requestAnimationFrame(r));
 
     await db.collection("tickets").doc(num).set({
-      nombre:nombre.value.trim(),
-      apellido:apellido.value.trim(),
-      telefono:telefono.value.trim(),
+      nombre:nombreEl.value.trim(),
+      apellido:apellidoEl.value.trim(),
+      telefono:telefonoEl.value.trim(),
       numero:num,
       qr,
       comprobante:url,
@@ -238,10 +240,13 @@ async function registrar(){
 }
 
 async function buscar(){
-  lista.innerHTML="Buscando...";
-  const q = await db.collection("tickets").where("telefono","==",buscarTel.value.trim()).get();
-  lista.innerHTML = q.empty ? "Sin tickets" : "";
-  q.forEach(d=>lista.innerHTML+=`<div class="ticket">${d.data().numero}<br><img src="${d.data().qr}"></div>`);
+  listaEl.innerHTML="Buscando...";
+  const q = await db.collection("tickets")
+    .where("telefono","==",buscarTelEl.value.trim()).get();
+  listaEl.innerHTML = q.empty ? "Sin tickets" : "";
+  q.forEach(d=>{
+    listaEl.innerHTML += `<div class="ticket">${d.data().numero}<br><img src="${d.data().qr}"></div>`;
+  });
 }
 </script>
 
