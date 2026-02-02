@@ -190,9 +190,11 @@ El ganador será seleccionado cuando se venda el 100% de los boletos.
 
 <script>
 firebase.initializeApp({
-  apiKey:"AIzaSyCKyR0Y8oTMDvQOI_j03uRMQiqjZvBysxw",
-  authDomain:"rifarird.firebaseapp.com",
-  projectId:"rifarird"
+  apiKey: "AIzaSyCKyR0Y8oTMDvQOI_j03uRMQiqjZvBysxw",
+  authDomain: "rifarird.firebaseapp.com",
+  projectId: "rifarird",
+  storageBucket: "rifarird.appspot.com"
+});
 });
 const db = firebase.firestore();
 const storage = firebase.storage();
@@ -292,3 +294,4 @@ async function buscar(){
 
 </body>
 </html>
+
