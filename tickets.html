@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Ticket RifariRD</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+  margin:0;
+  padding:20px;
+  font-family:Segoe UI,system-ui;
+  background:#020617;
+  color:#fff;
+  text-align:center;
+}
+.card{
+  max-width:420px;
+  margin:auto;
+  padding:24px;
+  border-radius:22px;
+  background:#020617;
+  border:1px solid #1e293b;
+}
+.ok{color:#22c55e;font-size:22px;font-weight:900}
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+⏳ Verificando ticket...
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+firebase.initializeApp({
+  apiKey:"AIzaSyCKyR0Y8oTMDvQOI_j03uRMQiqjZvBysxw",
+  authDomain:"rifarird.firebaseapp.com",
+  projectId:"rifarird"
+});
+const db=firebase.firestore();
+
+const id=new URLSearchParams(location.search).get("id");
+db.collection("tickets").doc(id).get().then(d=>{
+  if(!d.exists){
+    document.getElementById("card").innerHTML="❌ Ticket no válido";
+    return;
+  }
+  const t=d.data();
+  document.getElementById("card").innerHTML=`
+    <div class="ok">✅ Ticket válido</div>
+    <p><b>Número:</b> ${t.numero}</p>
+    <p><b>Nombre:</b> ${t.nombre}</p>
+    <p><b>Teléfono:</b> ${t.telefono}</p>
+  `;
+});
+</script>
+</body>
+</html>
