@@ -10,76 +10,200 @@
   --neon:#22c55e;
   --cyan:#06b6d4;
   --purple:#8b5cf6;
+  --bg:#020617;
 }
 *{box-sizing:border-box}
 body{
-  margin:0;padding:20px;
+  margin:0;
+  padding:20px;
   font-family:'Segoe UI',system-ui;
   min-height:100vh;
-  background:radial-gradient(circle at top,#0ea5e9,#020617 65%);
+  background:
+    radial-gradient(circle at top,#0ea5e9,#020617 65%),
+    linear-gradient(180deg,#020617,#020617);
   color:#fff;
 }
 .container{
-  max-width:460px;margin:auto;padding:24px;
-  border-radius:26px;
-  background:rgba(2,6,23,.78);
+  max-width:480px;
+  margin:auto;
+  padding:26px;
+  border-radius:28px;
+  background:rgba(2,6,23,.82);
   backdrop-filter:blur(18px);
+  box-shadow:0 40px 120px rgba(0,0,0,.75);
 }
-h1{text-align:center;font-size:26px;margin-bottom:12px;}
-.premio{font-size:20px;font-weight:900;text-align:center;background:linear-gradient(90deg,var(--neon),var(--cyan));-webkit-background-clip:text;color:transparent;}
+.logo{
+  width:200px;
+  display:block;
+  margin:0 auto 10px;
+  filter:drop-shadow(0 0 20px rgba(34,197,94,.6));
+}
+h1{text-align:center;margin:0;font-size:28px}
+.premio{
+  text-align:center;
+  font-size:22px;
+  font-weight:900;
+  margin:8px 0 20px;
+  background:linear-gradient(90deg,var(--neon),var(--cyan));
+  -webkit-background-clip:text;
+  color:transparent;
+}
 
-input, button{font-size:16px;}
-input{width:100%;padding:10px;border-radius:8px;border:1px solid #1e293b;background:#020617;color:#fff;margin-top:6px;}
+label{margin-top:14px;display:block;font-size:14px;color:#c7d2fe}
+input{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #1e293b;
+  background:#020617;
+  color:#fff;
+  margin-top:6px;
+}
+input:focus{outline:none;border-color:var(--cyan)}
+
+.ticket-control{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:10px;
+}
+.ticket-control button{
+  padding:10px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--cyan),var(--neon));
+  font-weight:800;
+  cursor:pointer;
+  color:#052e16;
+}
+
+.total{
+  text-align:center;
+  font-size:20px;
+  margin:14px 0;
+}
 
 button.main{
-  width:100%;padding:14px;margin-top:14px;
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:20px;
+  font-size:16px;
+  font-weight:900;
   background:linear-gradient(135deg,var(--neon),var(--cyan),var(--purple));
-  border:none;border-radius:14px;font-weight:800;color:#052e16;cursor:pointer;
+  cursor:pointer;
+  color:#052e16;
+  box-shadow:0 0 25px rgba(34,197,94,.6);
 }
-button.main:disabled{opacity:.6;cursor:not-allowed;}
+button.main:disabled{opacity:.6;cursor:not-allowed}
 
-.ticket{margin-top:14px;padding:14px;border-radius:14px;background:#020617;border:1px solid #1e293b;text-align:center;}
-.ticket img{width:120px;margin-top:8px;}
+.ticket{
+  margin-top:14px;
+  padding:14px;
+  border-radius:18px;
+  background:#020617;
+  border:1px solid #1e293b;
+  text-align:center;
+}
+.ticket img{width:140px;margin-top:8px}
 
-.progress-bar{margin-top:12px;height:14px;background:#020617;border-radius:999px;border:1px solid #1e293b;overflow:hidden;}
-.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#06b6d4,#8b5cf6);transition:width .3s;}
+.progress-box{margin-top:18px}
+.progress-bar{
+  width:100%;
+  height:16px;
+  background:#020617;
+  border-radius:999px;
+  border:1px solid #1e293b;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--neon),var(--cyan),var(--purple));
+  box-shadow:0 0 18px rgba(34,197,94,.9);
+  transition:width .4s ease;
+}
+.progress-text{
+  text-align:center;
+  font-size:13px;
+  color:#c7d2fe;
+  margin-top:6px;
+}
+
+.bank-box{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  margin:18px 0;
+}
+.bank-box img{
+  width:90px;
+  padding:10px;
+  background:#020617;
+  border-radius:14px;
+  border:1px solid #1e293b;
+}
+
+.legal{
+  margin-top:28px;
+  font-size:12px;
+  color:#94a3b8;
+  text-align:center;
+}
 </style>
 </head>
+
 <body>
-
 <div class="container">
-  <h1>RifariRD</h1>
-  <p class="premio">🎉 Rifando RD$50,000 🎉</p>
 
-  <label>Nombre</label>
-  <input id="nombre" placeholder="Ingresa tu nombre">
+<img src="logo.png" class="logo">
+<h1>RifariRD</h1>
+<p class="premio">🎉 Rifando RD$50,000 🎉</p>
 
-  <label>Apellido</label>
-  <input id="apellido" placeholder="Ingresa tu apellido">
+<label>Nombre</label>
+<input id="nombre">
 
-  <label>Teléfono</label>
-  <input id="telefono" placeholder="8091234567">
+<label>Apellido</label>
+<input id="apellido">
 
-  <label>Cantidad de tickets</label>
-  <input id="cantidad" type="number" min="1" value="1">
+<label>Teléfono</label>
+<input id="telefono">
 
-  <p>Total a pagar: <b>RD$ <span id="total">25</span></b></p>
+<label>Cantidad de tickets</label>
+<input id="cantidad" type="number" min="1" value="1">
 
-  <label><input type="checkbox" id="terminos"> Acepto los términos</label>
+<div class="ticket-control">
+  <button onclick="sumar(1)">+1</button>
+  <button onclick="sumar(5)">+5</button>
+  <button onclick="sumar(10)">+10</button>
+  <button onclick="sumar(50)">+50</button>
+</div>
 
-  <button class="main" id="btnRegistrar" onclick="registrar()">Registrar y asignar tickets</button>
+<div class="total">Total a pagar: <b>RD$ <span id="total">25</span></b></div>
 
-  <div id="resultado"></div>
+<label><input type="checkbox" id="terminos"> Acepto los términos</label>
 
-  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-  <p id="progressText">0% vendidos</p>
+<button class="main" onclick="registrar()">Registrar y asignar tickets</button>
 
-  <hr>
+<div id="resultado"></div>
 
-  <h3>🔎 Ver mis tickets</h3>
-  <input id="buscarTel" placeholder="Teléfono para buscar">
-  <button class="main" onclick="buscar()">Buscar</button>
-  <div id="lista"></div>
+<div class="progress-box">
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <div class="progress-text" id="progressText">0% vendidos</div>
+</div>
+
+<h3 style="text-align:center;margin-top:22px">💳 Cuentas disponibles</h3>
+<div class="bank-box">
+  <img src="banreservas.png">
+  <img src="qik.png">
+</div>
+
+<p class="legal">
+RifariRD es una rifa digital independiente.  
+El ganador será seleccionado cuando se venda el 100% de los boletos.
+</p>
 
 </div>
 
@@ -91,56 +215,56 @@ button.main:disabled{opacity:.6;cursor:not-allowed;}
 firebase.initializeApp({
   apiKey:"AIzaSyCKyR0Y8oTMDvQOI_j03uRMQiqjZvBysxw",
   authDomain:"rifarird.firebaseapp.com",
-  projectId:"rifarird",
+  projectId:"rifarird"
 });
 
 const db = firebase.firestore();
 const PRECIO = 25;
+const TOTAL = 10000;
 
+const cantidadEl = document.getElementById("cantidad");
 const totalEl = document.getElementById("total");
-document.getElementById("cantidad").oninput = e => {
-  totalEl.textContent = (e.target.value || 1) * PRECIO;
-};
 
-function generarQR(n){
-  return `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${n}`;
+cantidadEl.oninput = () => totalEl.textContent = (cantidadEl.value||1)*PRECIO;
+function sumar(n){cantidadEl.value=+cantidadEl.value+n;cantidadEl.oninput();}
+
+function generarQR(num){
+  return `${location.origin}${location.pathname.replace("index.html","")}ticket.html?id=${num}`;
 }
 
 db.collection("stats").doc("global").onSnapshot(doc=>{
   if(!doc.exists) return;
   const { vendidos, total } = doc.data();
   const pct = Math.round((vendidos/total)*100);
-  document.getElementById("progressFill").style.width = pct + '%';
-  document.getElementById("progressText").textContent = pct + '% vendidos';
+  document.getElementById("progressFill").style.width=pct+"%";
+  document.getElementById("progressText").textContent=pct+"% vendidos";
 });
 
 async function registrar(){
   const nombre = document.getElementById("nombre").value.trim();
   const apellido = document.getElementById("apellido").value.trim();
   const telefono = document.getElementById("telefono").value.trim();
-  const cantidad = Number(document.getElementById("cantidad").value);
+  const cant = +cantidadEl.value;
 
-  if(!nombre || !apellido || !telefono || !document.getElementById("terminos").checked){
+  if(!nombre||!apellido||!telefono||!document.getElementById("terminos").checked){
     alert("Completa todos los datos");
     return;
   }
 
-  const resultado = document.getElementById("resultado");
-  resultado.innerHTML = "<h3>⏳ Generando tickets...</h3>";
+  const res = document.getElementById("resultado");
+  res.innerHTML="<h3>⏳ Generando tickets...</h3>";
 
-  for(let i=0; i<cantidad; i++){
-    const num = Math.floor(Math.random()*10000).toString().padStart(4, "0");
+  for(let i=0;i<cant;i++){
+    let num;
+    do{
+      num = Math.floor(Math.random()*TOTAL).toString().padStart(4,"0");
+    }while((await db.collection("tickets").doc(num).get()).exists);
+
     const qr = generarQR(num);
-
-    const div = document.createElement("div");
-    div.className = "ticket";
-    div.innerHTML = `🎟️ <b>${num}</b><br><img src="${qr}">`;
-    resultado.appendChild(div);
+    res.innerHTML += `<div class="ticket">🎟️ <b>${num}</b><br><img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qr}"></div>`;
 
     await db.collection("tickets").doc(num).set({
-      nombre, apellido, telefono,
-      numero:num, qr,
-      fecha:new Date().toISOString()
+      nombre,apellido,telefono,numero:num,qr,fecha:new Date().toISOString()
     });
 
     await db.collection("stats").doc("global").update({
@@ -148,17 +272,6 @@ async function registrar(){
     });
   }
 }
-
-async function buscar(){
-  const tel = document.getElementById("buscarTel").value.trim();
-  const lista = document.getElementById("lista");
-  lista.innerHTML = "";
-  const q = await db.collection("tickets").where("telefono","==", tel).get();
-  q.forEach(d => {
-    lista.innerHTML += `<div class="ticket">${d.data().numero}<br><img src="${d.data().qr}"></div>`;
-  });
-}
 </script>
-
 </body>
 </html>
