@@ -200,43 +200,46 @@ db.collection("stats").doc("global").onSnapshot(doc=>{
 
 /* 🎟️ REGISTRAR */
 async function registrar(){
-  if(!nombreEl.value||!apellidoEl.value||!telefonoEl.value||!terminosEl.checked||!comprobanteEl.files.length){
-    alert("Completa todos los datos");
-    return;
-  }
+for(let i = 0; i < cantidadEl.value; i++){
 
-  resultadoEl.innerHTML = "<h3>⏳ Generando tickets...</h3>";
-  const cont = document.createElement("div");
-  resultadoEl.appendChild(cont);
+  // 1️⃣ GENERAR NÚMERO ALEATORIO (0000–9999)
+  let num;
+  do {
+    num = Math.floor(Math.random() * 10000)
+      .toString()
+      .padStart(4, "0");
+  } while ((await db.collection("tickets").doc(num).get()).exists);
 
-  const ref = storage.ref("comprobantes/"+Date.now()+"_"+comprobanteEl.files[0].name);
-  await ref.put(comprobanteEl.files[0]);
-  const url = await ref.getDownloadURL();
+  // 2️⃣ GENERAR QR
+  const qr = generarQR(num);
 
-  for(let i=0;i<cantidadEl.value;i++){
-    let num;
-    do{
-      num = Math.floor(Math.random()*TOTAL_TICKETS).toString().padStart(4,"0");
-    }while((await db.collection("tickets").doc(num).get()).exists);
+  // 3️⃣ MOSTRAR INMEDIATAMENTE EN PANTALLA
+  const ticketDiv = document.createElement("div");
+  ticketDiv.className = "ticket";
+  ticketDiv.innerHTML = `
+    🎟️ <b>${num}</b><br>
+    <img src="${qr}">
+  `;
+  cont.appendChild(ticketDiv);
 
-    const qr = generarQR(num);
-    cont.innerHTML += `<div class="ticket">🎟️ <b>${num}</b><br><img src="${qr}"></div>`;
-    await new Promise(r=>requestAnimationFrame(r));
+  // 🔥 FORZAR RENDER REAL
+  await new Promise(r => requestAnimationFrame(r));
 
-    await db.collection("tickets").doc(num).set({
-      nombre:nombreEl.value.trim(),
-      apellido:apellidoEl.value.trim(),
-      telefono:telefonoEl.value.trim(),
-      numero:num,
-      qr,
-      comprobante:url,
-      fecha:new Date().toISOString()
-    });
+  // 4️⃣ GUARDAR EN FIREBASE
+  await db.collection("tickets").doc(num).set({
+    nombre: nombreEl.value.trim(),
+    apellido: apellidoEl.value.trim(),
+    telefono: telefonoEl.value.trim(),
+    numero: num,
+    qr: qr,
+    comprobante: url,
+    fecha: new Date().toISOString()
+  });
 
-    await db.collection("stats").doc("global").update({
-      vendidos: firebase.firestore.FieldValue.increment(1)
-    });
-  }
+  // 5️⃣ ACTUALIZAR CONTADOR GLOBAL
+  await db.collection("stats").doc("global").update({
+    vendidos: firebase.firestore.FieldValue.increment(1)
+  });
 }
 
 async function buscar(){
@@ -252,3 +255,4 @@ async function buscar(){
 
 </body>
 </html>
+
