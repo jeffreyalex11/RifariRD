@@ -29,7 +29,6 @@ body{
   backdrop-filter:blur(18px);
   box-shadow:0 30px 80px rgba(0,0,0,.65);
 }
-.logo{width:220px;display:block;margin:auto}
 h1{text-align:center}
 .premio{
   text-align:center;
@@ -48,18 +47,10 @@ input{
   background:#020617;
   color:#fff;
 }
-.ticket{
-  margin-top:12px;
-  padding:14px;
-  border-radius:16px;
-  background:#020617;
-  border:1px solid #1e293b;
-  text-align:center;
-}
-.ticket img{width:140px;margin-top:8px}
 button.main{
   width:100%;
   padding:16px;
+  margin-top:14px;
   border:none;
   border-radius:20px;
   font-weight:900;
@@ -67,8 +58,17 @@ button.main{
   cursor:pointer;
   color:#052e16;
 }
-button.main:disabled{opacity:.6;cursor:not-allowed}
+.ticket{
+  margin-top:14px;
+  padding:14px;
+  border-radius:16px;
+  background:#020617;
+  border:1px solid #1e293b;
+  text-align:center;
+}
+.ticket img{width:140px;margin-top:8px}
 .progress-bar{
+  margin-top:16px;
   height:14px;
   background:#020617;
   border-radius:999px;
@@ -99,14 +99,11 @@ button.main:disabled{opacity:.6;cursor:not-allowed}
 
 <p>Total a pagar: <b>RD$ <span id="total">25</span></b></p>
 
-<label>Comprobante</label>
-<input type="file" id="comprobante">
-
 <label>
   <input type="checkbox" id="terminos"> Acepto los términos
 </label>
 
-<button class="main" id="btnRegistrar" onclick="registrar()">Registrar y asignar tickets</button>
+<button class="main" onclick="registrar()">Registrar y asignar tickets</button>
 
 <div id="resultado"></div>
 
@@ -127,111 +124,74 @@ button.main:disabled{opacity:.6;cursor:not-allowed}
 <!-- 🔥 FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
 <script>
 firebase.initializeApp({
   apiKey:"AIzaSyCKyR0Y8oTMDvQOI_j03uRMQiqjZvBysxw",
   authDomain:"rifarird.firebaseapp.com",
   projectId:"rifarird",
-  storageBucket:"rifarird.appspot.com",
   messagingSenderId:"1025146093171",
   appId:"1:1025146093171:web:cfbb5d16d59b14f89c3406"
 });
 
 const db = firebase.firestore();
-const storage = firebase.storage();
-
-const TOTAL_TICKETS = 10000;
 const PRECIO = 25;
 
 const totalEl = document.getElementById("total");
-const progressFill = document.getElementById("progressFill");
-const progressText = document.getElementById("progressText");
-const resultado = document.getElementById("resultado");
-
 document.getElementById("cantidad").oninput = e=>{
-  totalEl.textContent = (e.target.value||1)*PRECIO;
+  totalEl.textContent = (e.target.value || 1) * PRECIO;
 };
 
 function generarQR(n){
   return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${n}`;
 }
 
-/* 📊 PROGRESO GLOBAL */
+/* 📊 PROGRESO */
 db.collection("stats").doc("global").onSnapshot(doc=>{
   if(!doc.exists) return;
   const { vendidos, total } = doc.data();
   const pct = Math.round((vendidos/total)*100);
-  progressFill.style.width = pct+"%";
-  progressText.textContent = pct+"% vendidos";
-  if(pct>=100){
-    document.getElementById("btnRegistrar").disabled=true;
-  }
+  document.getElementById("progressFill").style.width = pct+"%";
+  document.getElementById("progressText").textContent = pct+"% vendidos";
 });
 
 /* 🎟️ REGISTRAR */
-<script>
 async function registrar(){
-  try {
-    const nombre = document.getElementById("nombre").value.trim();
-    const apellido = document.getElementById("apellido").value.trim();
-    const telefono = document.getElementById("telefono").value.trim();
-    const cantidad = Number(document.getElementById("cantidad").value);
-    const resultado = document.getElementById("resultado");
+  const nombre = nombreEl = document.getElementById("nombre").value.trim();
+  const apellido = document.getElementById("apellido").value.trim();
+  const telefono = document.getElementById("telefono").value.trim();
+  const cantidad = Number(document.getElementById("cantidad").value);
 
-    if(!nombre || !apellido || !telefono || !document.getElementById("terminos").checked){
-      alert("Completa todos los datos");
-      return;
-    }
+  if(!nombre || !apellido || !telefono || !document.getElementById("terminos").checked){
+    alert("Completa todos los datos");
+    return;
+  }
 
-    resultado.innerHTML = "";
-    const cont = document.createElement("div");
-    resultado.appendChild(cont);
+  const resultado = document.getElementById("resultado");
+  resultado.innerHTML = "";
 
-    for(let i = 0; i < cantidad; i++){
+  for(let i=0;i<cantidad;i++){
+    const num = Math.floor(Math.random()*10000).toString().padStart(4,"0");
+    const qr = generarQR(num);
 
-      // 🎯 NÚMERO PEGA 4 (0000–9999)
-      const num = Math.floor(Math.random() * 10000)
-        .toString()
-        .padStart(4, "0");
+    const div = document.createElement("div");
+    div.className="ticket";
+    div.innerHTML=`🎟️ <b>${num}</b><br><img src="${qr}">`;
+    resultado.appendChild(div);
 
-      const qr = generarQR(num);
+    await db.collection("tickets").doc(num).set({
+      nombre, apellido, telefono,
+      numero:num, qr,
+      fecha:new Date().toISOString()
+    });
 
-      // 👁️ MOSTRAR AL INSTANTE
-      const div = document.createElement("div");
-      div.className = "ticket";
-      div.innerHTML = `🎟️ <b>${num}</b><br><img src="${qr}">`;
-      cont.appendChild(div);
-
-      await new Promise(r => requestAnimationFrame(r));
-
-      // 💾 GUARDAR EN FIRESTORE
-      await db.collection("tickets").doc(num).set({
-        nombre,
-        apellido,
-        telefono,
-        numero: num,
-        qr,
-        comprobante: "PRUEBA_SIN_STORAGE",
-        fecha: new Date().toISOString()
-      });
-
-      // 📊 SUMAR PROGRESO
-      await db.collection("stats").doc("global").update({
-        vendidos: firebase.firestore.FieldValue.increment(1)
-      });
-    }
-
-    alert("✅ Tickets generados correctamente");
-
-  } catch (err) {
-    console.error(err);
-    alert("❌ Error: " + err.message);
+    await db.collection("stats").doc("global").update({
+      vendidos: firebase.firestore.FieldValue.increment(1)
+    });
   }
 }
-</script>
 
+/* 🔍 BUSCAR */
 async function buscar(){
   const tel = document.getElementById("buscarTel").value;
   const lista = document.getElementById("lista");
@@ -245,5 +205,3 @@ async function buscar(){
 
 </body>
 </html>
-
-
