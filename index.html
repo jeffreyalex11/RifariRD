@@ -298,47 +298,68 @@ db.collection("stats").doc("global").onSnapshot(doc=>{
 });
 
 async function registrar(){
-  const nombre = document.getElementById("nombre").value.trim();
-  const apellido = document.getElementById("apellido").value.trim();
-  const telefono = document.getElementById("telefono").value.trim();
-  const cant = +cantidadEl.value;
-  const comprobante = document.getElementById("comprobante").files[0];
 
-  if(!nombre || !apellido || !telefono || !comprobante){
-    alert("Completa todos los datos y sube el comprobante");
+  // 🔹 Obtener valores correctamente
+  const nombreVal = document.getElementById("nombre").value.trim();
+  const apellidoVal = document.getElementById("apellido").value.trim();
+  const telefonoVal = document.getElementById("telefono").value.trim();
+  const cantidadVal = Number(document.getElementById("cantidad").value);
+  const comprobanteFile = document.getElementById("comprobante").files[0];
+  const aceptaTerminos = document.getElementById("terminos").checked;
+
+  // 🔹 Validaciones
+  if(!nombreVal || !apellidoVal || !telefonoVal){
+    alert("Completa nombre, apellido y teléfono");
     return;
   }
-  if(!document.getElementById("terminos").checked){
-    alert("Debes aceptar los términos");
+
+  if(!comprobanteFile){
+    alert("Debes subir el comprobante de pago");
     return;
   }
 
-  const res = document.getElementById("resultado");
-  res.innerHTML = "<h3>⏳ Generando tickets...</h3>";
+  if(!aceptaTerminos){
+    alert("Debes aceptar los términos y políticas");
+    return;
+  }
 
-  const ref = storage.ref("comprobantes/" + Date.now() + "_" + comprobante.name);
-  await ref.put(comprobante);
+  const resultado = document.getElementById("resultado");
+  resultado.innerHTML = "<h3>⏳ Generando tickets...</h3>";
+
+  // 🔹 Subir comprobante
+  const ref = storage.ref(
+    "comprobantes/" + Date.now() + "_" + comprobanteFile.name
+  );
+  await ref.put(comprobanteFile);
   const comprobanteURL = await ref.getDownloadURL();
 
-  for(let i=0;i<cant;i++){
-    let num;
-    do{
-      num = Math.floor(Math.random()*TOTAL).toString().padStart(4,"0");
-    }while((await db.collection("tickets").doc(num).get()).exists);
+  // 🔹 Generar tickets
+  for(let i = 0; i < cantidadVal; i++){
 
-    const qr = generarQR(num);
-    res.innerHTML += `
+    let numero;
+    do{
+      numero = Math.floor(Math.random() * TOTAL)
+        .toString()
+        .padStart(4,"0");
+    }while((await db.collection("tickets").doc(numero).get()).exists);
+
+    const qrLink = generarQR(numero);
+
+    resultado.innerHTML += `
       <div class="ticket">
-        🎟️ <b>${num}</b><br>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qr}">
+        🎟️ <b>${numero}</b><br>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qrLink}">
       </div>
     `;
 
-    await db.collection("tickets").doc(num).set({
-      nombre, apellido, telefono,
-      numero:num, qr,
-      comprobante:comprobanteURL,
-      fecha:new Date().toISOString()
+    await db.collection("tickets").doc(numero).set({
+      nombre: nombreVal,
+      apellido: apellidoVal,
+      telefono: telefonoVal,
+      numero: numero,
+      qr: qrLink,
+      comprobante: comprobanteURL,
+      fecha: new Date().toISOString()
     });
 
     await db.collection("stats").doc("global").update({
@@ -370,3 +391,4 @@ async function buscar(){
 </script>
 </body>
 </html>
+
