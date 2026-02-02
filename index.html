@@ -178,56 +178,46 @@ async function registrar(){
     const apellido = document.getElementById("apellido").value.trim();
     const telefono = document.getElementById("telefono").value.trim();
     const cantidad = Number(document.getElementById("cantidad").value);
-    const file = document.getElementById("comprobante").files[0];
     const resultado = document.getElementById("resultado");
 
-    if(!nombre || !apellido || !telefono || !file || !document.getElementById("terminos").checked){
+    if(!nombre || !apellido || !telefono || !document.getElementById("terminos").checked){
       alert("Completa todos los datos");
       return;
     }
 
-    resultado.innerHTML = "<h3>⏳ Generando tickets...</h3>";
-
-    // 1️⃣ SUBIR COMPROBANTE (UNA SOLA VEZ)
-    const ref = storage.ref("comprobantes/" + Date.now() + "_" + file.name);
-    await ref.put(file);
-    const url = await ref.getDownloadURL();
-
-    // 2️⃣ CONTENEDOR
+    resultado.innerHTML = "";
     const cont = document.createElement("div");
     resultado.appendChild(cont);
 
-    // 3️⃣ LOOP DE TICKETS
     for(let i = 0; i < cantidad; i++){
 
-      // 🎲 NÚMERO ALEATORIO 0000–9999 (PEGA 4)
+      // 🎯 NÚMERO PEGA 4 (0000–9999)
       const num = Math.floor(Math.random() * 10000)
         .toString()
         .padStart(4, "0");
 
       const qr = generarQR(num);
 
-      // 👁️ MOSTRAR DE INMEDIATO
+      // 👁️ MOSTRAR AL INSTANTE
       const div = document.createElement("div");
       div.className = "ticket";
       div.innerHTML = `🎟️ <b>${num}</b><br><img src="${qr}">`;
       cont.appendChild(div);
 
-      // 🔥 FORZAR RENDER
       await new Promise(r => requestAnimationFrame(r));
 
-      // 💾 GUARDAR EN FIRESTORE (DESPUÉS DE MOSTRAR)
+      // 💾 GUARDAR EN FIRESTORE
       await db.collection("tickets").doc(num).set({
         nombre,
         apellido,
         telefono,
         numero: num,
         qr,
-        comprobante: url,
+        comprobante: "PRUEBA_SIN_STORAGE",
         fecha: new Date().toISOString()
       });
 
-      // 📊 CONTADOR GLOBAL
+      // 📊 SUMAR PROGRESO
       await db.collection("stats").doc("global").update({
         vendidos: firebase.firestore.FieldValue.increment(1)
       });
@@ -255,4 +245,5 @@ async function buscar(){
 
 </body>
 </html>
+
 
