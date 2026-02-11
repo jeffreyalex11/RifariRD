@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Verificar Boleto — RifariRD 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1A4FBD;--blue2:#1240A0;--sky:#3B82F6;
+  --yellow:#FFD700;--yellow2:#FFC107;--orange:#FF8C00;
+  --bg:#0B1A3E;--bg2:#0D2050;--card:#122468;--border:#2A4A9A;--border2:#3A5AB0;
+  --text:#EEF4FF;--muted:#7B9FD4;--green:#22C55E;--red:#EF4444;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Poppins',sans-serif;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:24px 16px;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 600px 500px at 50% -5%,rgba(255,215,0,.09) 0%,transparent 65%),
+    radial-gradient(ellipse 400px 400px at 90% 80%,rgba(59,130,246,.1) 0%,transparent 65%);
+  pointer-events:none;
+}
+.container{position:relative;z-index:1;width:100%;max-width:420px;}
+
+.logo-area{text-align:center;margin-bottom:28px;}
+.logo-img{
+  width:130px;display:block;margin:0 auto 10px;
+  filter:drop-shadow(0 4px 18px rgba(255,215,0,.4));
+  animation:bounce 4s ease-in-out infinite;
+}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.logo-sub{
+  font-size:11px;letter-spacing:3px;color:var(--muted);
+  text-transform:uppercase;font-weight:600;
+}
+.year-pill{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--yellow),var(--orange));
+  color:#000;font-weight:800;font-size:11px;
+  padding:3px 14px;border-radius:20px;
+  letter-spacing:2px;margin-bottom:6px;
+}
+
+/* CARD */
+.card{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:28px;padding:36px 28px;text-align:center;
+  animation:up .5s ease both;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+/* CARGANDO */
+.ring{
+  width:64px;height:64px;border-radius:50%;
+  border:3px solid var(--border2);border-top-color:var(--yellow);
+  animation:spin .9s linear infinite;margin:0 auto 22px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-txt{font-size:13px;color:var(--muted);font-weight:600;letter-spacing:1px;}
+
+/* VÁLIDO */
+.ok-ring{
+  width:84px;height:84px;border-radius:50%;
+  background:radial-gradient(rgba(34,197,94,.14),rgba(34,197,94,.04));
+  border:2px solid rgba(34,197,94,.35);
+  display:flex;align-items:center;justify-content:center;
+  font-size:38px;margin:0 auto 18px;
+  box-shadow:0 0 30px rgba(34,197,94,.2),0 0 70px rgba(34,197,94,.08);
+  animation:okPulse 2.5s ease-in-out infinite;
+}
+@keyframes okPulse{
+  0%,100%{box-shadow:0 0 20px rgba(34,197,94,.15);}
+  50%{box-shadow:0 0 40px rgba(34,197,94,.35),0 0 80px rgba(34,197,94,.1);}
+}
+.ok-lbl{
+  font-size:11px;font-weight:700;letter-spacing:3px;color:var(--green);
+  text-transform:uppercase;margin-bottom:22px;
+}
+.big-num{
+  font-family:'Fredoka One',cursive;
+  font-size:58px;
+  background:linear-gradient(135deg,var(--yellow),var(--yellow2),var(--orange));
+  -webkit-background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 18px rgba(255,215,0,.3));
+  letter-spacing:8px;line-height:1;margin-bottom:8px;
+}
+.deco-line{
+  width:70px;height:2.5px;
+  background:linear-gradient(90deg,transparent,var(--yellow2),transparent);
+  margin:14px auto 22px;border-radius:2px;
+}
+.info-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:13px 0;border-bottom:1px solid var(--border);
+}
+.info-row:last-child{border-bottom:none;}
+.info-k{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.info-v{font-size:14px;font-weight:800;color:var(--text);}
+.verified{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(34,197,94,.08);border:1.5px solid rgba(34,197,94,.25);
+  color:var(--green);border-radius:30px;
+  font-size:11px;font-weight:700;letter-spacing:1px;
+  padding:9px 20px;margin-top:22px;
+}
+
+/* INVÁLIDO */
+.err-ring{
+  width:84px;height:84px;border-radius:50%;
+  background:rgba(239,68,68,.09);border:2px solid rgba(239,68,68,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:38px;margin:0 auto 18px;
+}
+.err-title{
+  font-family:'Fredoka One',cursive;
+  font-size:24px;color:var(--red);margin-bottom:10px;
+}
+.err-sub{font-size:13px;color:var(--muted);line-height:2;}
+.back-btn{
+  display:block;margin-top:24px;
+  padding:16px;border-radius:16px;
+  background:linear-gradient(135deg,var(--yellow),var(--orange));
+  color:#000;font-weight:800;font-size:14px;
+  text-decoration:none;transition:all .15s;
+  font-family:'Fredoka One',cursive;letter-spacing:1px;
+  box-shadow:0 6px 20px rgba(255,215,0,.3);
+}
+.back-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,215,0,.4);}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="logo-area">
+    <img src="logo.png" class="logo-img" alt="RifariRD"
+         onerror="this.style.display='none'">
+    <div class="year-pill">✨ 2026 ✨</div><br>
+    <div class="logo-sub">Verificación de boleto</div>
+  </div>
+
+  <!-- CARGANDO -->
+  <div class="card" id="sLoad">
+    <div class="ring"></div>
+    <div class="load-txt">Verificando tu boleto...</div>
+  </div>
+
+  <!-- VÁLIDO -->
+  <div class="card" id="sOk" style="display:none">
+    <div class="ok-ring">✅</div>
+    <div class="ok-lbl">✓ Boleto Válido</div>
+    <div class="big-num" id="vNum">0000</div>
+    <div class="deco-line"></div>
+    <div id="vRows"></div>
+    <div class="verified">🔒 Verificado · RifariRD 2026</div>
+  </div>
+
+  <!-- INVÁLIDO -->
+  <div class="card" id="sErr" style="display:none">
+    <div class="err-ring">❌</div>
+    <div class="err-title">Boleto no válido</div>
+    <div class="err-sub">
+      Este código no corresponde<br>a ningún boleto registrado.
+    </div>
+    <a href="index.html" class="back-btn">🏠 Volver al inicio</a>
+  </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey:"AIzaSyCKyR0Y8oTMDvQOI_j03uRMQiqjZvBysxw",
+  authDomain:"rifarird.firebaseapp.com",
+  projectId:"rifarird"
+});
+const db=firebase.firestore();
+const sLoad=document.getElementById("sLoad");
+const sOk=document.getElementById("sOk");
+const sErr=document.getElementById("sErr");
+function show(el){[sLoad,sOk,sErr].forEach(e=>e.style.display="none");el.style.display="block";}
+function fmt(iso){
+  try{return new Date(iso).toLocaleDateString("es-DO",{year:"numeric",month:"long",day:"numeric"});}
+  catch(e){return iso||"";}
+}
+(async()=>{
+  const id=new URLSearchParams(location.search).get("id");
+  if(!id){show(sErr);return;}
+  try{
+    const snap=await db.collection("tickets").doc(id).get();
+    if(!snap.exists||snap.data().reservado===true){show(sErr);return;}
+    const t=snap.data();
+    document.getElementById("vNum").textContent=t.numero||id;
+    const rows=[
+      {k:"Propietario", v:`${t.nombre||""} ${t.apellido||""}`},
+      {k:"Teléfono",    v:t.telefono||"—"},
+      {k:"Registrado",  v:fmt(t.fecha)},
+    ];
+    const cont=document.getElementById("vRows");
+    rows.forEach(r=>{
+      const d=document.createElement("div");
+      d.className="info-row";
+      d.innerHTML=`<span class="info-k">${r.k}</span><span class="info-v">${r.v}</span>`;
+      cont.appendChild(d);
+    });
+    show(sOk);
+  }catch(e){console.error(e);show(sErr);}
+})();
+</script>
+</body>
+</html>
