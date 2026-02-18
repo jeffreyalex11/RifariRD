@@ -291,9 +291,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
 
   <!-- IMAGEN PREMIO -->
   <div class="prize-banner">
-    <img src="fondo.jpg" class="prize-img" alt="Premio"
-         onerror="this.src='https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=600&q=80';this.style.display='block';"
-         style="min-height:200px;">
+    <img src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=600&q=80" class="prize-img" alt="Premio">
     <div class="prize-overlay"></div>
     <div class="prize-caption">
       <div class="prize-cap-tag">🏆 Premio Mayor</div>
@@ -461,7 +459,6 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
 firebase.initializeApp({
   apiKey:            "AIzaSyDcxgSSq69-GlEsHyQ9_ORZNXLcPERdVmw",
   authDomain:        "rifarird1.firebaseapp.com",
@@ -721,7 +718,6 @@ async function buscar(){
     sr.innerHTML = `<div class="empty-msg" style="color:#EF4444">❌ Error: ${e.message}</div>`;
   }
 }
-}); // end DOMContentLoaded
 </script>
 </body>
 </html>
