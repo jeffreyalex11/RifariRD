@@ -301,7 +301,6 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
     </div>
     <div class="prog-pct-display" id="pctDisplay">0%</div>
     <div class="prog-pct-label">de boletos vendidos</div>
-    <div id="soldCount" style="font-size:12px;color:var(--muted);margin-top:6px;letter-spacing:1px;">0 / 10,000 boletos</div>
     <div class="sold-out-banner" id="soldOutBanner">🎉 ¡Todos los boletos han sido vendidos!</div>
   </div>
 
@@ -346,14 +345,6 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
       </div>
       <button class="copy-btn" id="btn-qk" onclick="event.stopPropagation();copiar('1003191261','btn-qk')">📋 Copiar</button>
     </div>
-    <div class="bank-card pp" onclick="openPayPal()">
-      <div class="bank-ico">🅿️</div>
-      <div class="bank-info">
-        <div class="bank-name">PayPal</div>
-        <div class="bank-num" style="font-size:13px;letter-spacing:0;color:#009cde;">Internacional · USD</div>
-        <div class="bank-holder">Jeffrey Flores · Ver QR o pagar en línea</div>
-      </div>
-      <button class="copy-btn" style="background:rgba(0,112,186,.15);color:#009cde;border-color:rgba(0,156,222,.3);" onclick="event.stopPropagation();openPayPal()">💳 PayPal</button>
     <div class="bank-card bhd" onclick="copiar('31403830018','btn-bhd')">
       <div class="bank-ico">🏛️</div>
       <div class="bank-info">
@@ -362,6 +353,15 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
         <div class="bank-holder">Luis Rafael Andeliz · Cuenta de Ahorro</div>
       </div>
       <button class="copy-btn" id="btn-bhd" onclick="event.stopPropagation();copiar('31403830018','btn-bhd')">📋 Copiar</button>
+    </div>
+    <div class="bank-card pp" onclick="openPayPal()">
+      <div class="bank-ico">🅿️</div>
+      <div class="bank-info">
+        <div class="bank-name">PayPal</div>
+        <div class="bank-num" style="font-size:13px;letter-spacing:0;color:#009cde;">Internacional · USD</div>
+        <div class="bank-holder">Jeffrey Flores · Ver QR o pagar en línea</div>
+      </div>
+      <button class="copy-btn" style="background:rgba(0,112,186,.15);color:#009cde;border-color:rgba(0,156,222,.3);" onclick="event.stopPropagation();openPayPal()">💳 PayPal</button>
     </div>
   </div>
   <div class="pay-note">⚠️ Realiza el pago y sube el comprobante para recibir tus boletos</div>
@@ -571,10 +571,6 @@ db.collection("stats").doc("global").onSnapshot(doc=>{
 
   barFill.style.width       = clipped + "%";
   pctDisplay.textContent    = display;
-
-  /* Contador de boletos vendidos */
-  const countEl = document.getElementById("soldCount");
-  if(countEl) countEl.textContent = vendidos.toLocaleString("es-DO") + " / " + total.toLocaleString("es-DO") + " boletos";
 
   if(clipped >= 100){
     btnReg.disabled        = true;
