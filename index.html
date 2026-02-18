@@ -459,17 +459,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
 </div>
 
 <script>
-firebase.initializeApp({
-  apiKey:            "AIzaSyDcxgSSq69-GlEsHyQ9_ORZNXLcPERdVmw",
-  authDomain:        "rifarird1.firebaseapp.com",
-  projectId:         "rifarird1",
-  storageBucket:     "rifarird1.appspot.com",
-  messagingSenderId: "518504310706",
-  appId:             "1:518504310706:web:2dac5976cb6b8e39e9e6ab"
-});
-
-const db         = firebase.firestore();
-const FieldValue = firebase.firestore.FieldValue;
+/* ── FUNCIONES GLOBALES (disponibles inmediatamente) ── */
 
 const TOTAL  = 10000;
 const PRECIO = 25;
@@ -478,21 +468,8 @@ const BASE   = (()=>{
   return location.origin + p;
 })();
 
-const nombreEl   = document.getElementById("nombre");
-const apellidoEl = document.getElementById("apellido");
-const telefonoEl = document.getElementById("telefono");
-const cantEl     = document.getElementById("cantidad");
-const termEl     = document.getElementById("terminos");
-const totalValEl = document.getElementById("totalVal");
-const barFill    = document.getElementById("barFill");
-const pctDisplay = document.getElementById("pctDisplay");
-const soldOut    = document.getElementById("soldOutBanner");
-const btnReg     = document.getElementById("btnReg");
-const statusBox  = document.getElementById("statusBox");
-const ticketList = document.getElementById("ticketsList");
-const toastEl    = document.getElementById("toast");
-
 let fotoBase64 = "";
+let db, FieldValue;
 
 function onFileChange(input){
   if(!input.files || !input.files[0]) return;
@@ -516,7 +493,6 @@ function onFileChange(input){
   reader.readAsDataURL(file);
 }
 
-/* PAYPAL MODAL */
 function openPayPal(){
   document.getElementById('ppModal').classList.add('open');
 }
@@ -528,6 +504,7 @@ function closePPModal(e){
 
 let toastT;
 function toast(msg){
+  const toastEl = document.getElementById("toast");
   toastEl.textContent = msg;
   toastEl.classList.add("on");
   clearTimeout(toastT);
@@ -545,70 +522,33 @@ function copiar(num, btnId){
 }
 
 function actualizarTotal(){
+  const cantEl = document.getElementById("cantidad");
+  const totalValEl = document.getElementById("totalVal");
   const v = Math.max(1, parseInt(cantEl.value)||1);
   totalValEl.textContent = (v * PRECIO).toLocaleString("es-DO");
 }
-cantEl.addEventListener("input", actualizarTotal);
-function cambiar(d){ cantEl.value = Math.max(1,(parseInt(cantEl.value)||1)+d); actualizarTotal(); }
-function setCant(n){ cantEl.value = n; actualizarTotal(); }
 
-/* Inicializar stats/global si no existe */
-db.collection("stats").doc("global").get().then(doc=>{
-  if(!doc.exists){
-    db.collection("stats").doc("global").set({ vendidos: 0, total: TOTAL });
-  }
-}).catch(e=>console.warn("Init stats:", e));
+function cambiar(d){
+  const cantEl = document.getElementById("cantidad");
+  cantEl.value = Math.max(1,(parseInt(cantEl.value)||1)+d);
+  actualizarTotal();
+}
 
-/* Escuchar cambios en tiempo real */
-db.collection("stats").doc("global").onSnapshot(doc=>{
-  const vendidos = doc.exists ? (doc.data().vendidos || 0) : 0;
-  const total    = doc.exists ? (doc.data().total    || TOTAL) : TOTAL;
-  const rawPct   = (vendidos / total) * 100;
-  const clipped  = Math.min(rawPct, 100);
-
-  /* Mostrar con decimal solo si es muy pequeño */
-  let display;
-  if(clipped === 0)           display = "0%";
-  else if(clipped < 1)        display = clipped.toFixed(1) + "%";
-  else if(clipped < 10)       display = clipped.toFixed(1) + "%";
-  else                        display = Math.round(clipped) + "%";
-
-  barFill.style.width       = clipped + "%";
-  pctDisplay.textContent    = display;
-
-  if(clipped >= 100){
-    btnReg.disabled        = true;
-    btnReg.textContent     = "🎉 ¡Rifa Completada!";
-    soldOut.style.display  = "block";
-  } else {
-    /* Asegurarse de que el botón esté activo si hay cupo */
-    if(btnReg.textContent === "🎉 ¡Rifa Completada!") return;
-    btnReg.disabled = false;
-  }
-}, e=>console.warn("Stats:", e));
+function setCant(n){
+  const cantEl = document.getElementById("cantidad");
+  cantEl.value = n;
+  actualizarTotal();
+}
 
 function setStatus(msg, tipo="loading"){
+  const statusBox = document.getElementById("statusBox");
   statusBox.className = "status-box " + tipo;
   statusBox.innerHTML = tipo==="loading"
     ? `<span class="spinner"></span>${msg}` : msg;
   statusBox.style.display = "block";
 }
-function clearStatus(){ statusBox.style.display = "none"; }
-
-async function numUnico(){
-  for(let i=0; i<50; i++){
-    const n = Math.floor(Math.random()*TOTAL).toString().padStart(4,"0");
-    const ref = db.collection("tickets").doc(n);
-    try{
-      await db.runTransaction(async tx=>{
-        const snap = await tx.get(ref);
-        if(snap.exists) throw new Error("OCUPADO");
-        tx.set(ref, {reservado:true});
-      });
-      return n;
-    }catch(e){ if(e.message !== "OCUPADO") throw e; }
-  }
-  throw new Error("No hay números disponibles. Intenta de nuevo.");
+function clearStatus(){
+  document.getElementById("statusBox").style.display = "none";
 }
 
 function qrURL(num){
@@ -633,10 +573,30 @@ function renderTicket(num, nombre, apellido, qr, container, delay=0){
   container.appendChild(d);
 }
 
+async function numUnico(){
+  for(let i=0; i<50; i++){
+    const n = Math.floor(Math.random()*TOTAL).toString().padStart(4,"0");
+    const ref = db.collection("tickets").doc(n);
+    try{
+      await db.runTransaction(async tx=>{
+        const snap = await tx.get(ref);
+        if(snap.exists) throw new Error("OCUPADO");
+        tx.set(ref, {reservado:true});
+      });
+      return n;
+    }catch(e){ if(e.message !== "OCUPADO") throw e; }
+  }
+  throw new Error("No hay números disponibles. Intenta de nuevo.");
+}
+
 async function registrar(){
-  const nombre   = nombreEl.value.trim();
-  const apellido = apellidoEl.value.trim();
-  const telefono = telefonoEl.value.trim();
+  const nombre   = document.getElementById("nombre").value.trim();
+  const apellido = document.getElementById("apellido").value.trim();
+  const telefono = document.getElementById("telefono").value.trim();
+  const cantEl   = document.getElementById("cantidad");
+  const termEl   = document.getElementById("terminos");
+  const btnReg   = document.getElementById("btnReg");
+  const ticketList = document.getElementById("ticketsList");
   const cantidad = Math.max(1, parseInt(cantEl.value)||1);
 
   if(!nombre || !apellido || !telefono){
@@ -647,6 +607,9 @@ async function registrar(){
   }
   if(!termEl.checked){
     setStatus("⚠️ Acepta los términos y condiciones.", "error"); return;
+  }
+  if(!db){
+    setStatus("⚠️ Error de conexión. Recarga la página.", "error"); return;
   }
 
   btnReg.disabled = true;
@@ -697,6 +660,7 @@ async function buscar(){
   if(!tel) return;
   const sr = document.getElementById("searchRes");
   sr.innerHTML = `<div class="empty-msg"><span class="spinner"></span> Buscando...</div>`;
+  if(!db){ sr.innerHTML = `<div class="empty-msg" style="color:#EF4444">❌ Error de conexión.</div>`; return; }
   try{
     const q = await db.collection("tickets").where("telefono","==",tel).get();
     if(q.empty){
@@ -718,6 +682,59 @@ async function buscar(){
     sr.innerHTML = `<div class="empty-msg" style="color:#EF4444">❌ Error: ${e.message}</div>`;
   }
 }
+
+/* ── FIREBASE INIT (se ejecuta al cargar el DOM) ── */
+document.addEventListener("DOMContentLoaded", function(){
+  try {
+    firebase.initializeApp({
+      apiKey:            "AIzaSyDcxgSSq69-GlEsHyQ9_ORZNXLcPERdVmw",
+      authDomain:        "rifarird1.firebaseapp.com",
+      projectId:         "rifarird1",
+      storageBucket:     "rifarird1.appspot.com",
+      messagingSenderId: "518504310706",
+      appId:             "1:518504310706:web:2dac5976cb6b8e39e9e6ab"
+    });
+
+    db         = firebase.firestore();
+    FieldValue = firebase.firestore.FieldValue;
+
+    /* Inicializar stats si no existe */
+    db.collection("stats").doc("global").get().then(doc=>{
+      if(!doc.exists){
+        db.collection("stats").doc("global").set({ vendidos: 0, total: TOTAL });
+      }
+    }).catch(e=>console.warn("Init stats:", e));
+
+    /* Barra de progreso en tiempo real */
+    db.collection("stats").doc("global").onSnapshot(doc=>{
+      const vendidos = doc.exists ? (doc.data().vendidos || 0) : 0;
+      const total    = doc.exists ? (doc.data().total    || TOTAL) : TOTAL;
+      const rawPct   = (vendidos / total) * 100;
+      const clipped  = Math.min(rawPct, 100);
+
+      let display;
+      if(clipped === 0)      display = "0%";
+      else if(clipped < 10)  display = clipped.toFixed(1) + "%";
+      else                   display = Math.round(clipped) + "%";
+
+      document.getElementById("barFill").style.width     = clipped + "%";
+      document.getElementById("pctDisplay").textContent  = display;
+
+      const btnReg = document.getElementById("btnReg");
+      if(clipped >= 100){
+        btnReg.disabled       = true;
+        btnReg.textContent    = "🎉 ¡Rifa Completada!";
+        document.getElementById("soldOutBanner").style.display = "block";
+      }
+    }, e=>console.warn("Stats:", e));
+
+    /* Input de cantidad */
+    document.getElementById("cantidad").addEventListener("input", actualizarTotal);
+
+  } catch(e) {
+    console.error("Firebase init error:", e);
+  }
+});
 </script>
 </body>
 </html>
