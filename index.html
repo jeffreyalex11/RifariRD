@@ -42,10 +42,15 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
 .prize-banner{margin:18px 0;border-radius:26px;overflow:hidden;border:2px solid rgba(255,215,0,.4);box-shadow:0 0 50px rgba(255,215,0,.18),0 20px 50px rgba(0,0,0,.5);position:relative;}
 .prize-img{width:100%;display:block;max-height:280px;object-fit:cover;}
 .prize-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(11,26,62,.93) 0%,rgba(11,26,62,.3) 55%,transparent 100%);}
-.prize-caption{position:absolute;bottom:0;left:0;right:0;padding:22px 24px;}
+.prize-caption{position:absolute;bottom:0;left:0;right:0;padding:22px 24px;z-index:2;}
 .prize-cap-tag{display:inline-block;background:linear-gradient(135deg,var(--yellow),var(--orange));color:#000;font-weight:800;font-size:11px;letter-spacing:2px;padding:3px 14px;border-radius:20px;margin-bottom:8px;text-transform:uppercase;}
 .prize-cap-amount{font-family:'Fredoka One',cursive;font-size:42px;color:var(--yellow);line-height:1;}
 .prize-cap-sub{font-size:13px;color:rgba(238,244,255,.7);margin-top:4px;}
+.prize-banner{background:linear-gradient(135deg,#0B1A3E,#1A3080);}
+.prize-static{display:none;margin:0 0 18px;padding:24px;border-radius:26px;text-align:center;background:linear-gradient(135deg,#0B1A3E,#1A3080);border:2px solid rgba(255,215,0,.4);box-shadow:0 0 50px rgba(255,215,0,.18);}
+.prize-static-tag{display:inline-block;background:linear-gradient(135deg,var(--yellow),var(--orange));color:#000;font-weight:800;font-size:11px;letter-spacing:2px;padding:3px 14px;border-radius:20px;margin-bottom:12px;text-transform:uppercase;}
+.prize-static-amount{font-family:'Fredoka One',cursive;font-size:52px;color:var(--yellow);line-height:1;margin-bottom:6px;text-shadow:0 0 30px rgba(255,215,0,.5);}
+.prize-static-sub{font-size:13px;color:rgba(238,244,255,.7);}
 
 .prog-section{margin:20px 0;padding:28px 24px;border-radius:24px;background:var(--card);border:1px solid var(--border);text-align:center;}
 .prog-logo{width:110px;display:block;margin:0 auto 18px;filter:drop-shadow(0 2px 12px rgba(255,215,0,.4));animation:logoBounce 4s ease-in-out infinite;}
@@ -244,6 +249,9 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
   .social-links{flex-direction:column;align-items:center;}
 }
 </style>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 
 <body>
@@ -284,7 +292,8 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
   <!-- IMAGEN PREMIO -->
   <div class="prize-banner">
     <img src="fondo.jpg" class="prize-img" alt="Premio"
-         onerror="this.src='https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=600&q=80'">
+         onerror="this.src='https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=600&q=80';this.style.display='block';"
+         style="min-height:200px;">
     <div class="prize-overlay"></div>
     <div class="prize-caption">
       <div class="prize-cap-tag">🏆 Premio Mayor</div>
@@ -451,10 +460,8 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
 
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
 <script>
+document.addEventListener('DOMContentLoaded', function() {
 firebase.initializeApp({
   apiKey:            "AIzaSyDcxgSSq69-GlEsHyQ9_ORZNXLcPERdVmw",
   authDomain:        "rifarird1.firebaseapp.com",
@@ -714,6 +721,7 @@ async function buscar(){
     sr.innerHTML = `<div class="empty-msg" style="color:#EF4444">❌ Error: ${e.message}</div>`;
   }
 }
+}); // end DOMContentLoaded
 </script>
 </body>
 </html>
