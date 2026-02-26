@@ -61,6 +61,13 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
 @keyframes barShine{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
 .prog-pct-display{font-family:'Fredoka One',cursive;font-size:52px;background:linear-gradient(135deg,var(--yellow),var(--orange));-webkit-background-clip:text;color:transparent;line-height:1;margin-bottom:6px;}
 .prog-pct-label{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.prog-motivacion{
+  margin-top:14px;padding:12px 18px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(26,79,189,.08));
+  border:1px solid rgba(59,130,246,.25);
+  font-size:13px;color:var(--text);line-height:1.6;text-align:center;
+}
+.prog-motivacion b{color:var(--yellow2);}
 .sold-out-banner{display:none;margin-top:16px;padding:14px 20px;border-radius:16px;background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(255,140,0,.1));border:2px solid rgba(255,215,0,.4);font-family:'Fredoka One',cursive;font-size:18px;color:var(--yellow);animation:pulseAnim 1.5s ease-in-out infinite;}
 @keyframes pulseAnim{0%,100%{opacity:1}50%{opacity:.65}}
 
@@ -279,6 +286,12 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
 }
 .tc-modal-body::-webkit-scrollbar{width:4px;}
 .tc-modal-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+.tc-intro{
+  font-size:13px;color:var(--muted);line-height:1.7;
+  padding:14px 16px;border-radius:12px;margin-bottom:20px;
+  background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.15);
+  font-style:italic;
+}
 .tc-section{margin-bottom:22px;}
 .tc-section:last-child{margin-bottom:0;}
 .tc-section-title{
@@ -401,6 +414,9 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
     <div class="prog-pct-display" id="pctDisplay">0%</div>
     <div class="prog-pct-label">de boletos vendidos</div>
     <div class="sold-out-banner" id="soldOutBanner">🎉 ¡Todos los boletos han sido vendidos!</div>
+    <div class="prog-motivacion" id="progMotivacion">
+      🚀 Al llegar al <b>80% de ventas</b>, anunciaremos la fecha oficial del sorteo. ¡Falta poco para el 100%!
+    </div>
   </div>
 
   <!-- REDES SOCIALES -->
@@ -526,56 +542,61 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
         </div>
         <div class="tc-modal-body">
 
+          <div class="tc-intro">
+            Al realizar la compra de un boleto en nuestro sitio web, el participante declara haber leído y aceptado los siguientes términos y condiciones:
+          </div>
+
           <div class="tc-section">
             <div class="tc-section-title">1. Elegibilidad</div>
             <ul class="tc-list">
-              <li>El sorteo está abierto exclusivamente para personas físicas mayores de <b>18 años</b> con residencia legal en la República Dominicana o dominicanos en el extranjero.</li>
+              <li>El sorteo está abierto exclusivamente para personas físicas mayores de <b>dieciocho (18) años de edad</b>, con residencia legal en la República Dominicana o dominicanos en el extranjero.</li>
               <li>No podrán participar personas vinculadas directamente a la administración de RifariRD.</li>
             </ul>
           </div>
 
           <div class="tc-section">
-            <div class="tc-section-title">2. Dinámica del Sorteo — Pega 4 Real</div>
+            <div class="tc-section-title">2. Dinámica del Sorteo y Selección del Ganador (Pega 4 Real)</div>
             <ul class="tc-list">
               <li>El ganador será determinado en base a los resultados del sorteo <b>Pega 4 Real</b> de la Lotería Real.</li>
-              <li>El número ganador corresponderá exactamente a los <b>4 dígitos</b> resultantes del sorteo en la fecha programada.</li>
-              <li>RifariRD no tiene vínculo, sociedad ni patrocinio con la Lotería Real; su uso es como referencia externa y pública.</li>
-              <li>Si el número resultante no ha sido vendido, el sorteo se moverá automáticamente al <b>Pega 4 Real del día siguiente</b> hasta que resulte un ganador con boleto pagado.</li>
+              <li><b>Referencia:</b> El número ganador corresponderá exactamente a los <b>4 dígitos</b> resultantes del sorteo Pega 4 Real de la <b>fecha oficial del evento</b>.</li>
+              <li><b>Independencia:</b> RifariRD aclara que no tiene vínculo, sociedad ni patrocinio con la Lotería Real; el uso de sus resultados es puramente como referencia externa y pública.</li>
+              <li><b>Números no vendidos:</b> En caso de que el número resultante del Pega 4 Real no haya sido vendido, el sorteo se moverá automáticamente al sorteo del <b>día siguiente de la misma lotería</b> hasta que resulte un ganador con boleto pagado.</li>
             </ul>
           </div>
 
           <div class="tc-section">
-            <div class="tc-section-title">3. Validación de Pagos</div>
+            <div class="tc-section-title">3. Validación de Pagos (Importante)</div>
             <ul class="tc-list">
-              <li>El participante debe adjuntar una <b>captura de pantalla legible</b> del comprobante de transferencia o depósito bancario a través del formulario oficial.</li>
-              <li>Un boleto solo se considera <b>"Activo"</b> una vez que nuestro equipo administrativo verifique que los fondos han sido recibidos.</li>
-              <li>Los registros con comprobantes falsos, manipulados o transferencias devueltas serán <b>anulados de inmediato</b> sin derecho a reclamo.</li>
+              <li><b>Registro de Pago:</b> El participante debe adjuntar una <b>captura de pantalla legible</b> del comprobante de transferencia o depósito bancario a través de nuestro formulario oficial.</li>
+              <li><b>Confirmación:</b> Un boleto solo se considera <b>"Activo"</b> una vez que nuestro equipo administrativo verifique que los fondos han sido recibidos en nuestras cuentas.</li>
+              <li><b>Anulación:</b> Los registros con comprobantes falsos, manipulados o de transferencias devueltas serán <b>anulados de inmediato</b> sin derecho a reclamo.</li>
             </ul>
           </div>
 
           <div class="tc-section">
-            <div class="tc-section-title">4. Meta de Ventas y Fechas</div>
+            <div class="tc-section-title">4. Meta de Ventas y Programación de Fecha</div>
             <ul class="tc-list">
-              <li><b>Condición del 80%:</b> La celebración del sorteo está sujeta a la venta de al menos el 80% de los boletos totales.</li>
-              <li>Si no se alcanza dicha meta, RifariRD se reserva el derecho de <b>posponer el sorteo</b> hasta cumplir el mínimo necesario para garantizar la entrega del premio de <b>RD$100,000.00</b>.</li>
+              <li><b>Objetivo de Venta:</b> El objetivo principal de RifariRD es alcanzar la venta del <b>100% de los boletos</b> para proceder con el sorteo.</li>
+              <li><b>Confirmación de Fecha (Regla del 80%):</b> Una vez alcanzado el <b>80% de los boletos vendidos</b>, la administración procederá a fijar y anunciar la <b>Fecha Definitiva del Sorteo</b>.</li>
+              <li><b>Aviso:</b> Si en la fecha tentativa inicialmente prevista no se ha llegado al mínimo del 80%, la fecha final será pospuesta y anunciada a través de nuestras <b>redes sociales y WhatsApp</b> una vez se cumpla con dicho porcentaje.</li>
             </ul>
           </div>
 
           <div class="tc-section">
             <div class="tc-section-title">5. Entrega de Premios y Transferibilidad</div>
             <ul class="tc-list">
-              <li>El premio será entregado al <b>titular de la cédula registrada</b>.</li>
-              <li>El premio puede ser <b>transferido o cedido a un tercero</b>, siempre que el ganador original autorice por escrito y presente documentación de identidad de ambas partes.</li>
-              <li>El ganador tiene un plazo de <b>30 días calendario</b> para reclamar su premio.</li>
+              <li>El premio de <b>RD$100,000.00</b> será entregado al titular de la cédula registrada.</li>
+              <li><b>Cesión de Premio:</b> El ganador podrá transferir o ceder el premio a un tercero, siempre que lo notifique formalmente a la administración con <b>copia de cédula de ambas partes</b>.</li>
+              <li>El reclamo del premio tiene un plazo máximo de <b>30 días calendario</b>.</li>
             </ul>
           </div>
 
           <div class="tc-section">
             <div class="tc-section-title">6. Transparencia y Consentimiento de Imagen (Obligatorio)</div>
             <ul class="tc-list">
-              <li>La entrega del premio será documentada en <b>foto y video</b> para demostrar la veracidad y transparencia del sorteo.</li>
-              <li>Al participar, el ganador (o su cesionario) <b>acepta irrevocablemente</b> la publicación de dicho material en las redes sociales y página web de RifariRD.</li>
-              <li>La aceptación de esta cláusula es <b>indispensable</b> para la entrega del premio.</li>
+              <li>Con el fin de demostrar la veracidad y transparencia del sorteo ante toda la comunidad, la entrega del premio será <b>documentada en foto y video</b>.</li>
+              <li>Al participar, el ganador (o su cesionario) acepta de manera <b>obligatoria</b> la publicación de dicho material en las redes sociales y sitio web de RifariRD.</li>
+              <li>Esta cláusula es una <b>condición indispensable</b> para la entrega de los fondos, garantizando así a todos los participantes que el premio llegó a su destino.</li>
             </ul>
           </div>
 
@@ -893,10 +914,14 @@ document.addEventListener("DOMContentLoaded", function(){
       document.getElementById("pctDisplay").textContent  = display;
 
       const btnReg = document.getElementById("btnReg");
+      const motivacion = document.getElementById("progMotivacion");
       if(clipped >= 100){
         btnReg.disabled       = true;
         btnReg.textContent    = "🎉 ¡Rifa Completada!";
         document.getElementById("soldOutBanner").style.display = "block";
+        if(motivacion) motivacion.style.display = "none";
+      } else if(clipped >= 80){
+        if(motivacion) motivacion.innerHTML = '🎯 ¡Ya superamos el <b>80%</b>! La <b>fecha oficial del sorteo</b> será anunciada muy pronto. ¡Gracias por tu confianza!';
       }
     }, e=>console.warn("Stats:", e));
 
