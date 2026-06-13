@@ -853,9 +853,7 @@ document.addEventListener("DOMContentLoaded", function(){
       document.getElementById("barFill").style.width     = clipped + "%";
       document.getElementById("pctDisplay").textContent  = display;
 
-      // Actualizar texto de boletos vendidos vs total
-      const label = document.querySelector(".prog-pct-label");
-      if(label) label.innerHTML = `Boletos<br>vendidos<br><small style="font-size:10px;color:var(--muted)">${vendidos.toLocaleString()} / ${total.toLocaleString()}</small>`;
+
 
       const btnReg = document.getElementById("btnReg");
       const motivacion = document.getElementById("progMotivacion");
