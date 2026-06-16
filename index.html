@@ -363,7 +363,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
   <div class="card">
     <div class="prog-head">
       <div class="prog-pct-display" id="pctDisplay">0%</div>
-      <div class="prog-pct-label">Boletos<br>confirmados</div>
+      
     </div>
     
     <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
@@ -633,7 +633,7 @@ function triggerSecretAccess() {
   secretClicks++;
   clearTimeout(secretTimer);
   secretTimer = setTimeout(() => { secretClicks = 0; }, 10000);
-  if (secretClicks >= 5) { secretClicks = 0; openAdmin(); }
+  if (secretClicks >= 3) { secretClicks = 0; openAdmin(); }
 }
 
 function openAdmin() {
