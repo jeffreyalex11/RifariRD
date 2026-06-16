@@ -69,8 +69,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
 .prog-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:10px;}
 .prog-pct-display{font-family:'Sora',sans-serif;font-weight:800;font-size:52px;line-height:1;background:linear-gradient(135deg,var(--gold3) 0%,var(--gold) 50%,var(--gold2) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
 .prog-pct-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;text-align:right;line-height:1.6;}
-.prog-count{font-size:13px;color:var(--muted);margin-bottom:12px;}
-.prog-count b{color:var(--gold);}
+
 .bar-track{height:14px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,190,60,.1);overflow:hidden;}
 .bar-fill{height:100%;border-radius:999px;width:0%;background:linear-gradient(90deg,var(--amber),var(--gold2),var(--gold),var(--gold3));transition:width 1.4s cubic-bezier(.4,0,.2,1);position:relative;box-shadow:0 0 16px rgba(255,190,60,.5);}
 .bar-fill::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);animation:barShine 2.8s ease-in-out infinite;}
@@ -366,7 +365,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
       <div class="prog-pct-display" id="pctDisplay">0%</div>
       <div class="prog-pct-label">Boletos<br>confirmados</div>
     </div>
-    <div class="prog-count"><b id="vendidosCount">0</b> de <b>10,000</b> boletos confirmados</div>
+    
     <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
     <div class="sold-out-banner" id="soldOutBanner">🎉 ¡Todos los boletos han sido vendidos!</div>
     <div class="prog-motivacion" id="progMotivacion">🚀 Al llegar al <b>80% de ventas</b> anunciaremos la fecha oficial del sorteo.</div>
@@ -633,7 +632,7 @@ async function buscar() {
 function triggerSecretAccess() {
   secretClicks++;
   clearTimeout(secretTimer);
-  secretTimer = setTimeout(() => { secretClicks = 0; }, 2000);
+  secretTimer = setTimeout(() => { secretClicks = 0; }, 10000);
   if (secretClicks >= 5) { secretClicks = 0; openAdmin(); }
 }
 
@@ -836,7 +835,7 @@ window.addEventListener("load", function() {
       const display = pct === 0 ? "0%" : pct < 1 ? pct.toFixed(2) + "%" : pct < 10 ? pct.toFixed(1) + "%" : Math.round(pct) + "%";
       document.getElementById("barFill").style.width = pct + "%";
       document.getElementById("pctDisplay").textContent = display;
-      document.getElementById("vendidosCount").textContent = vendidos.toLocaleString("es-DO");
+
       if (pct >= 100) {
         rifaCompleta = true;
         const btnReg = document.getElementById("btnReg");
