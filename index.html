@@ -412,23 +412,23 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
     <div class="divider"></div>
     <div class="section-hd">&#128290; Cantidad de boletos</div>
     <div class="qty-row">
-      <button class="qty-btn" onclick="cambiar(-1)">&#8722;</button>
-      <input class="qty-input" id="cantidad" type="number" min="1" max="500" value="1" oninput="actualizarTotal()">
-      <button class="qty-btn" onclick="cambiar(1)">+</button>
+      <button class="qty-btn" type="button" onclick="var c=document.getElementById('cantidad');var n=Math.max(1,(parseInt(c.value)||1)-1);c.value=n;document.getElementById('totalVal').textContent='RD$ '+(n*50).toLocaleString('es-DO');">&#8722;</button>
+      <input class="qty-input" id="cantidad" type="number" min="1" max="500" value="1" oninput="var n=Math.max(1,parseInt(this.value)||1);this.value=n;document.getElementById('totalVal').textContent='RD$ '+(n*50).toLocaleString('es-DO');">
+      <button class="qty-btn" type="button" onclick="var c=document.getElementById('cantidad');var n=(parseInt(c.value)||1)+1;c.value=n;document.getElementById('totalVal').textContent='RD$ '+(n*50).toLocaleString('es-DO');">+</button>
     </div>
     <div class="presets">
-      <button class="preset" onclick="setCant(5)">&times; 5</button>
-      <button class="preset" onclick="setCant(10)">&times; 10</button>
-      <button class="preset" onclick="setCant(25)">&times; 25</button>
-      <button class="preset" onclick="setCant(50)">&times; 50</button>
+      <button class="preset" type="button" onclick="document.getElementById('cantidad').value=5;document.getElementById('totalVal').textContent='RD$ 250';">x 5</button>
+      <button class="preset" type="button" onclick="document.getElementById('cantidad').value=10;document.getElementById('totalVal').textContent='RD$ 500';">x 10</button>
+      <button class="preset" type="button" onclick="document.getElementById('cantidad').value=25;document.getElementById('totalVal').textContent='RD$ 1,250';">x 25</button>
+      <button class="preset" type="button" onclick="document.getElementById('cantidad').value=50;document.getElementById('totalVal').textContent='RD$ 2,500';">x 50</button>
     </div>
     <div class="total-box">
       <span class="total-lbl">&#128176; Total a pagar</span>
-      <span class="total-val">RD$ <span id="totalVal">50</span></span>
+      <span class="total-val" id="totalVal">RD$ 50</span>
     </div>
     <label class="check-row">
-      <input type="checkbox" id="terminos">
-      <span>Acepto los <a href="#" onclick="event.preventDefault();abrirTC()">t&#233;rminos y condiciones</a> de RifariRD 2026.</span>
+      <input type="checkbox" id="terminos" type="checkbox">
+      <span>Acepto los <a href="#" onclick="event.preventDefault();event.stopPropagation();abrirTC();return false;">terminos y condiciones</a> de RifariRD 2026.</span>
     </label>
     <button class="btn-main" id="btnReg" onclick="registrar()">&#127967; Registrar y obtener mis boletos</button>
     <div style="margin-top:12px;padding:12px 16px;border-radius:12px;background:rgba(255,140,0,.06);border:1px solid rgba(255,140,0,.18);font-size:12px;color:var(--muted);line-height:1.7;">
@@ -460,15 +460,50 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min
       <button class="modal-close" onclick="cerrarTC()">&#10005;</button>
       <div class="tc-modal-header"><div class="tc-modal-icon">&#128221;</div><div class="tc-modal-title">T&#233;rminos y Condiciones</div><div class="tc-modal-sub">RIFARIRD 2026</div></div>
       <div class="tc-modal-body">
-        <div class="tc-intro">Al comprar un boleto, el participante acepta los siguientes t&#233;rminos:</div>
-        <div class="tc-section"><div class="tc-section-title">1. Elegibilidad</div><ul class="tc-list"><li>Mayores de <b>18 a&#241;os</b> con residencia legal en Rep&#250;blica Dominicana.</li></ul></div>
-        <div class="tc-section"><div class="tc-section-title">2. Sorteo &#8212; Pega 4 Real</div><ul class="tc-list"><li>Ganador = <b>4 d&#237;gitos</b> del Pega 4 Real de Loter&#237;a Real en la fecha oficial.</li><li>Si el n&#250;mero no fue vendido, pasa al <b>d&#237;a siguiente</b>.</li></ul></div>
-        <div class="tc-section"><div class="tc-section-title">3. Validaci&#243;n</div><ul class="tc-list"><li>Boleto <b>Confirmado</b> solo tras verificar el pago recibido.</li><li>Comprobantes falsos ser&#225;n <b>anulados</b>.</li></ul></div>
-        <div class="tc-section"><div class="tc-section-title">4. Meta</div><ul class="tc-list"><li>Al <b>80%</b> confirmado se anuncia la fecha. Sorteo al <b>100%</b>.</li></ul></div>
-        <div class="tc-section"><div class="tc-section-title">5. Premio</div><ul class="tc-list"><li><b>RD$100,000</b> al titular. Plazo de reclamo: <b>30 d&#237;as</b>.</li><li>Entrega documentada y publicada en redes de RifariRD.</li></ul></div>
-        <div class="tc-section"><div class="tc-section-title">6. Regla de Participaci&#243;n</div><ul class="tc-list"><li>Cada participante puede adquirir la cantidad de boletos que desee. No hay l&#237;mite por persona.</li><li>Los boletos son <b>personales e intransferibles</b>. El nombre registrado debe coincidir con el titular del pago.</li><li>RifariRD se reserva el derecho de <b>anular cualquier registro</b> que presente informaci&#243;n falsa, duplicada o fraudulenta sin previo aviso.</li><li>Al participar, el comprador acepta que RifariRD es una rifa de car&#225;cter privado organizada bajo los t&#233;rminos aqu&#237; establecidos, sin vinculaci&#243;n con ninguna entidad gubernamental.</li><li>La participaci&#243;n es <b>voluntaria</b> y el comprador asume plena responsabilidad de los datos proporcionados.</li></ul></div>
+        <div class="tc-intro">La adquisicion de cualquier boleto digital implica la aceptacion total, automatica e irrevocable de estas clausulas. Al marcar "Acepto", el Cliente declara haber leido y comprendido el presente contrato en su totalidad.</div>
+
+        <div class="tc-section"><div class="tc-section-title">FASE 1 — Regulacion Tecnica de la Pagina Web</div><ul class="tc-list">
+          <li><b>Propiedad Intelectual:</b> El codigo fuente, diseno, logotipo y marca RifariRD son propiedad exclusiva del Organizador. Queda prohibida su copia o clonacion.</li>
+          <li><b>Estabilidad del Sistema:</b> La Administracion no se hace responsable por caidas temporales del sitio o fallas de internet del Cliente al enviar el formulario. Si el sistema falla tras un pago comprobado, se asignara un numero equivalente de mutuo acuerdo.</li>
+          <li><b>Privacidad (Ley 172-13):</b> Los datos personales (Nombre, Apellido y WhatsApp) no seran vendidos ni compartidos con terceros. Se usan unicamente para identificar al titular del boleto y contactar al ganador.</li>
+        </ul></div>
+
+        <div class="tc-section"><div class="tc-section-title">FASE 2 — Emision y Adquisicion de Boletos</div><ul class="tc-list">
+          <li><b>Emision Cerrada:</b> La rifa consta de <b>10,000 boletos digitales</b> fijos, numerados del 0000 al 9999. No existen boletos fisicos.</li>
+          <li><b>Libertad de Compra:</b> El Cliente puede adquirir todos los boletos que desee, sin limite maximo por persona.</li>
+          <li><b>Estado Pendiente:</b> Tras enviar el formulario con el comprobante, los numeros quedan reservados temporalmente pero aun no participan en el sorteo.</li>
+          <li><b>Estado Confirmado:</b> El boleto adquiere validez juridica unicamente cuando la Administracion verifica la entrada real de los fondos en sus cuentas bancarias.</li>
+          <li><b>Tolerancia Cero al Fraude:</b> Comprobantes falsos, editados o reutilizados resultaran en la anulacion inmediata y definitiva de todos los boletos, sin derecho a reclamo ni reembolso.</li>
+        </ul></div>
+
+        <div class="tc-section"><div class="tc-section-title">FASE 3 — Mecanica del Sorteo y Transparencia</div><ul class="tc-list">
+          <li><b>Numero Ganador:</b> Se determinara por los <b>4 digitos del Primer Premio del Pega 4 Real</b> de Loteria Real de la Republica Dominicana, en la fecha pautada, en estricto orden de izquierda a derecha.</li>
+          <li><b>Premio No Desierto:</b> Si el numero del Pega 4 Real no fue vendido o fue anulado, el sorteo se traslada automaticamente al dia siguiente consecutivo hasta coincidir con un boleto vendido y confirmado.</li>
+          <li><b>Hito del 80%:</b> Al confirmarse el 80% de la boleteria, el Organizador anunciara publicamente la fecha estimada del sorteo.</li>
+          <li><b>Sorteo al 100%:</b> El sorteo se ejecutara de forma irrevocable al alcanzarse los 10,000 boletos confirmados.</li>
+          <li><b>Transmision en Vivo:</b> El sorteo se transmitira en vivo por Instagram en <b>@rifarird</b> y <b>@wi.lber945</b> para garantizar total transparencia.</li>
+        </ul></div>
+
+        <div class="tc-section"><div class="tc-section-title">FASE 4 — Entrega de Premios</div><ul class="tc-list">
+          <li><b>Dos (2) premios</b> de <b>RD$100,000.00</b> cada uno, entregados mediante transferencia bancaria electronica a cuenta dominicana regulada.</li>
+          <li><b>Identidad Coincidente:</b> La cuenta bancaria debe pertenecer exclusivamente a la persona cuyos datos fueron registrados. No se transfiere a terceros bajo ninguna circunstancia.</li>
+          <li><b>Plazo de Reclamo:</b> El ganador dispone de <b>30 dias calendario</b> desde el sorteo para reclamar su premio. Transcurrido ese plazo, el derecho prescribira.</li>
+          <li><b>Evidencia:</b> El comprobante de transferencia y su confirmacion seran documentados y difundidos en las redes de RifariRD para certificar la entrega ante todos los participantes.</li>
+        </ul></div>
+
+        <div class="tc-section"><div class="tc-section-title">FASE 5 — Desvinculacion Legal Absoluta</div><ul class="tc-list">
+          <li><b>RifariRD es una iniciativa de sorteo PRIVADA e INDEPENDIENTE.</b></li>
+          <li>El Organizador NO posee ninguna relacion con Loteria Real ni con ninguna entidad publica o privada del Estado Dominicano.</li>
+          <li>Los resultados del Pega 4 Real se usan unicamente como parametro publico de azar imparcial. La Loteria Real no avala, administra, patrocina ni es responsable de RifariRD.</li>
+          <li>El Cliente acepta esta desvinculacion total desde el momento en que ingresa al sitio web.</li>
+        </ul></div>
+
+        <div style="margin:20px 0 8px;padding:16px;border-radius:14px;background:rgba(255,190,60,.08);border:2px solid rgba(255,190,60,.3);font-size:13px;color:var(--text);line-height:1.8;text-align:center;">
+          <b style="color:var(--gold);font-size:15px;">Al presionar "Acepto los Terminos", el Cliente declara:</b><br><br>
+          Haber leido, comprendido y aceptado en su totalidad las presentes Bases Legales y Terminos y Condiciones de RifariRD Edicion 2026, comprometiendose a respetar cada una de sus clausulas de forma voluntaria, consciente e irrevocable.
+        </div>
       </div>
-      <button class="tc-btn-accept" onclick="aceptarTC()">&#10003; Entendido y acepto</button>
+      <button class="tc-btn-accept" onclick="aceptarTC()">&#10003; Acepto los Terminos y Condiciones</button>
     </div>
   </div>
 
@@ -514,8 +549,10 @@ function copiar(num, id) {
 
 /* CANTIDAD */
 function actualizarTotal() {
-  var v = Math.max(1, parseInt(document.getElementById("cantidad").value) || 1);
-  document.getElementById("totalVal").textContent = (v * PRECIO).toLocaleString("es-DO");
+  var inp = document.getElementById("cantidad");
+  var v = Math.max(1, parseInt(inp ? inp.value : 1) || 1);
+  var el = document.getElementById("totalVal");
+  if (el) el.textContent = "RD$ " + (v * 50).toLocaleString("es-DO");
 }
 function cambiar(d) {
   var el = document.getElementById("cantidad");
@@ -535,9 +572,20 @@ function setStatus(msg, tipo) {
 function clearStatus() { document.getElementById("statusBox").style.display = "none"; }
 
 /* T&C */
-function abrirTC() { document.getElementById("tcModal").classList.add("open"); }
-function cerrarTC() { document.getElementById("tcModal").classList.remove("open"); }
-function aceptarTC() { document.getElementById("terminos").checked = true; cerrarTC(); showToast("Terminos aceptados"); }
+function abrirTC() {
+  var m = document.getElementById("tcModal");
+  if (m) m.classList.add("open");
+}
+function cerrarTC() {
+  var m = document.getElementById("tcModal");
+  if (m) m.classList.remove("open");
+}
+function aceptarTC() {
+  var t = document.getElementById("terminos");
+  if (t) t.checked = true;
+  cerrarTC();
+  showToast("Terminos aceptados");
+}
 document.getElementById("tcModal").addEventListener("click", function(e){ if (e.target === e.currentTarget) cerrarTC(); });
 
 /* UPLOAD */
