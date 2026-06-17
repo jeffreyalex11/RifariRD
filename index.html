@@ -536,19 +536,29 @@ document.getElementById("comprobante").addEventListener("change", function() {
   const file = this.files[0];
   const reader = new FileReader();
   reader.onload = function(e) {
-    fotoBase64 = e.target.result;
-    // Actualizar label
-    const lbl = document.getElementById("uploadLabel");
-    lbl.classList.add("ready");
-    document.getElementById("uploadIcon").textContent = "✅";
-    document.getElementById("uploadTxt").textContent = file.name;
-    document.getElementById("uploadSub").textContent = "Foto lista · toca para cambiar";
-    // Mostrar preview
-    document.getElementById("previewImg").src = fotoBase64;
-    document.getElementById("previewWrap").style.display = "block";
-    showToast("📷 Comprobante cargado correctamente");
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement("canvas");
+      const MAX = 600;
+      let w = img.width, h = img.height;
+      if (w > MAX || h > MAX) {
+        if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+        else { w = Math.round(w * MAX / h); h = MAX; }
+      }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+      fotoBase64 = canvas.toDataURL("image/jpeg", 0.65);
+      document.getElementById("uploadLabel").classList.add("ready");
+      document.getElementById("uploadIcon").textContent = "✅";
+      document.getElementById("uploadTxt").textContent = file.name;
+      document.getElementById("uploadSub").textContent = "✅ Foto lista";
+      document.getElementById("previewImg").src = fotoBase64;
+      document.getElementById("previewWrap").style.display = "block";
+      showToast("📷 Comprobante cargado ✅");
+    };
+    img.src = e.target.result;
   };
-  reader.onerror = function() { showToast("❌ Error al leer la imagen. Intenta de nuevo."); };
+  reader.onerror = function() { showToast("❌ Error al leer imagen."); };
   reader.readAsDataURL(file);
 });
 
